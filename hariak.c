@@ -1,6 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <getopt.h>
+#include <sys/wait.h>
 
 #include "define_hariak.h"
 
@@ -8,7 +12,7 @@
 
 
 
-void sortu_hariak(int hari_kop){
+void sortu_hariak(int hari_kop, int proz_kop){
 
     int i, err;
     pthread_t *hariak;
@@ -31,6 +35,7 @@ void sortu_hariak(int hari_kop){
         if(i == 1){
             h_p[i].name = "Process Generator";
             h_p[i].id = i;
+            h_p[i].p_kop = proz_kop;
             err = pthread_create(&hariak[i], NULL, process_generator, (void *)&h_p[i]);;
 
             if(err > 0){
@@ -68,18 +73,31 @@ void sortu_hariak(int hari_kop){
 }
 
 int main(int argc, char *argv[]){
-    
-    //char *p;
-    //int i, hari_kop;
 
-    if(argc !=2){
-        fprintf(stderr, "Erabilpena: ./4arik hari-kopurua\n");
-        exit(1);
+    int proz_kop, c, i;
+
+    while ((c = getopt (argc, argv, "p:")) != -1){
+        switch (c){
+            case 'p':
+                proz_kop = atoi(optarg);
+                break;
+            case '?':
+                if (optopt == 'p')
+                    fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+                else if (isprint (optopt))
+                    fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+                else
+                    fprintf (stderr,"Unknown option character `\\x%x'.\n", optopt);
+                return 1;
+            default:
+                abort ();
+      }
     }
 
-    //hari_kop = strtol(argv[1], &p, 10);
+    sortu_hariak(HARIKOP, proz_kop);
 
-    sortu_hariak(HARIKOP);
+    for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
+        waitpid(-1, NULL, 0);
 
     return(0);
 }
