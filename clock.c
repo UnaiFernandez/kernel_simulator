@@ -7,7 +7,7 @@
 #include "define_hariak.h"
 
 
-volatile int tick = 0;
+volatile int tick = 3;
 
 void *clockfunc(void *hari_par){
 
