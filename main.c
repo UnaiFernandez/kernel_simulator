@@ -12,7 +12,7 @@
 
 
 
-void sortu_hariak(int hari_kop, int proz_kop){
+void sortu_hariak(int hari_kop, int proz_kop, int maiz){
 
     int i, err;
     pthread_t *hariak;
@@ -56,6 +56,7 @@ void sortu_hariak(int hari_kop, int proz_kop){
         if(i == 3){
             h_p[i].name = "Clock";
             h_p[i].id = i;
+            h_p[i].maiz = maiz;
             err = pthread_create(&hariak[i], NULL, clockfunc, (void *)&h_p[i]);;
 
             if(err > 0){
@@ -74,12 +75,17 @@ void sortu_hariak(int hari_kop, int proz_kop){
 
 int main(int argc, char *argv[]){
 
-    int proz_kop, c, i;
+    int proz_kop, c, i, maiz;
+    //double maiz;
+    char *p;
 
-    while ((c = getopt (argc, argv, "p:")) != -1){
+    while ((c = getopt (argc, argv, "p:m:")) != -1){
         switch (c){
             case 'p':
                 proz_kop = atoi(optarg);
+                break;
+            case 'm':
+                maiz = strtol(optarg, &p, 10);
                 break;
             case '?':
                 if (optopt == 'p')
@@ -94,7 +100,7 @@ int main(int argc, char *argv[]){
       }
     }
 
-    sortu_hariak(HARIKOP, proz_kop);
+    sortu_hariak(HARIKOP, proz_kop, maiz);
 
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
         waitpid(-1, NULL, 0);
