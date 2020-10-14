@@ -6,13 +6,14 @@ struct hari_param{
     char * name;
     int p_kop;
     int maiz;
+    int timer;
 };
 
 void *scheduler_dispatcher(void *hari_param);
 void *process_generator(void *hari_param);
 void *timer(void *hari_param);
 void *clockfunc(void *hari_param);
-void sortu_hariak(int hari_kop, int proz_kop, int maiz);
+void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim);
 
 struct process_control_block{
     int pid;

@@ -12,7 +12,7 @@
 
 
 
-void sortu_hariak(int hari_kop, int proz_kop, int maiz){
+void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
 
     int i, err;
     pthread_t *hariak;
@@ -46,6 +46,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz){
         if(i == 2){
             h_p[i].name = "Timer";
             h_p[i].id = i;
+            h_p[i].timer = tim;
             err = pthread_create(&hariak[i], NULL, timer, (void *)&h_p[i]);;
 
             if(err > 0){
@@ -75,17 +76,19 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz){
 
 int main(int argc, char *argv[]){
 
-    int proz_kop, c, i, maiz;
-    //double maiz;
+    int proz_kop, c, i, maiz, tim;
     char *p;
 
-    while ((c = getopt (argc, argv, "p:m:")) != -1){
+    while ((c = getopt (argc, argv, "p:m:t:")) != -1){
         switch (c){
             case 'p':
                 proz_kop = atoi(optarg);
                 break;
             case 'm':
                 maiz = strtol(optarg, &p, 10);
+                break;
+            case 't':
+                tim = strtol(optarg, &p, 10);
                 break;
             case '?':
                 if (optopt == 'p')
@@ -100,7 +103,7 @@ int main(int argc, char *argv[]){
       }
     }
 
-    sortu_hariak(HARIKOP, proz_kop, maiz);
+    sortu_hariak(HARIKOP, proz_kop, maiz, tim);
 
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
         waitpid(-1, NULL, 0);
