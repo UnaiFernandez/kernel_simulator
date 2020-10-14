@@ -18,6 +18,10 @@ void *timer(void *hari_par){
     while(tick != t+param->timer){
         sleep(1);
         printf("timer: %d\n", tick);
+        if(tick == t+param->timer){
+            printf("denbora agortuta!\n");
+            t = tick;
+        }
     }
 
     printf("loop exit: %d\n", tick);
