@@ -10,18 +10,21 @@ void *timer(void *hari_par){
 
     struct hari_param *param;
     int t;
+    sem_t sem1;
     param = (struct hari_param *)hari_par;
     printf("TIMER:\n id = %d    name = %s\n", param->id, param->name);
     //int tick;
     t = tick;
 
     while(tick != t+param->timer){
-        sleep(1);
-        printf("timer: %d\n", tick);
+        //sleep(param->maiz);
+        //printf("timer: %d\n", tick);
+        sem_wait(&sem1);
         if(tick == t+param->timer){
             printf("denbora agortuta!\n");
             t = tick;
         }
+        sem_post(&sem1);
     }
 
     printf("loop exit: %d\n", tick);

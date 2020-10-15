@@ -1,4 +1,5 @@
 /*MAIN PROGRAMAKO DEFINIZIOAK*/
+#include <semaphore.h>
 #define HARIKOP 4
 
 struct hari_param{
@@ -21,3 +22,4 @@ struct process_control_block{
 
 // tick en azken balioa irakurtzen dela bermatzeko
 extern volatile int tick;
+

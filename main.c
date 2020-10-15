@@ -79,6 +79,7 @@ int main(int argc, char *argv[]){
     int proz_kop, c, i, maiz, tim;
     char *p;
 
+
     while ((c = getopt (argc, argv, "p:m:t:")) != -1){
         switch (c){
             case 'p':

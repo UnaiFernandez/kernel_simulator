@@ -7,7 +7,10 @@ OBJ = binaries/main
 all:
 		$(CC) main.c sched_disp.c timer.c clock.c p_generator.c -o $(OBJ) $(CFLAGS)
 exec:
-		./binaries/main -p 10 -m 1 -t 10
+		./binaries/main -p 10 -m 100000 -t 5
+execf:
+		./binaries/main -p 10 -m 100000 -t 10 > binaries/file
+
 clean:
 		rm -rf binaries/main
 		rm -rf *.o
