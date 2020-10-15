@@ -9,30 +9,29 @@
 
 
 volatile int tick = 0;
-
+//sem_t semt, semc;
 void *clockfunc(void *hari_par){
 
-    sem_t sem1;
     struct hari_param *param;
     int t = 0;
     
-    sem_init(&sem1, 0, 1);
     param = (struct hari_param *)hari_par;
-    printf("CLOCK:\n id = %d    name = %s\n", param->id, param->name);
+    printf("[CLOCK]:\n id = %d    name = %s\n", param->id, param->name);
     while(1){
         //sleep(1);
-        sem_wait(&sem1);
+        sem_wait(&semt);
         if(t < param->maiz){
             t++;
             //printf("t: %d\n", t);
         }else{
             t = 0;
             tick++;
-            printf("tick: %d\n", tick);
+            printf("[CLOCK] tick: %d\n", tick);
         }
-        sem_post(&sem1);
+        sem_post(&semc);
     }
-    sem_destroy(&sem1);
-    printf("sem destroyed\n");
+        printf("sem destroyed\n");
     pthread_exit(NULL);
 }
+
+

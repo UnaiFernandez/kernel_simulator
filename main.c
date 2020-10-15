@@ -10,7 +10,7 @@
 
 
 
-
+sem_t semt, semc;
 
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
 
@@ -104,8 +104,14 @@ int main(int argc, char *argv[]){
       }
     }
 
-    sortu_hariak(HARIKOP, proz_kop, maiz, tim);
+    sem_init(&semt, 0, 1);
+    sem_init(&semc, 0, 0);
 
+    sortu_hariak(HARIKOP, proz_kop, maiz, tim);
+    
+    sem_destroy(&semt);
+    sem_destroy(&semc);
+    
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
         waitpid(-1, NULL, 0);
 
