@@ -18,7 +18,7 @@ void *timer(void *hari_par){
     //while(tick != t+param->timer){
     while(1){
         //sleep(param->maiz);
-        //printf("timer: %d\n", tick);
+//        printf("[timer] tick: %d\n", tick);
         sem_wait(&semc);
         if(tick == t+param->timer){
             printf("[TIMER] denbora agortuta!\n");

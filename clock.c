@@ -19,16 +19,16 @@ void *clockfunc(void *hari_par){
     printf("[CLOCK]:\n id = %d    name = %s\n", param->id, param->name);
     while(1){
         //sleep(1);
-        sem_wait(&semt);
         if(t < param->maiz){
             t++;
             //printf("t: %d\n", t);
         }else{
+            sem_wait(&semt);
             t = 0;
             tick++;
             printf("[CLOCK] tick: %d\n", tick);
+            sem_post(&semc);
         }
-        sem_post(&semc);
     }
         printf("sem destroyed\n");
     pthread_exit(NULL);
