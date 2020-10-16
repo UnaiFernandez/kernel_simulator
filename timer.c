@@ -5,13 +5,15 @@
 
 #include "define_hariak.h"
 
+volatile int timtick = 0;
+
 void *timer(void *hari_par){
 
     struct hari_param *param;
     int t;
 //    sem_t semt, semc;
     param = (struct hari_param *)hari_par;
-    printf("[TIMER:]\n id = %d    name = %s\n", param->id, param->name);
+    printf("[TIMER] id = %d    name = %s\n", param->id, param->name);
     //int tick;
     t = tick;
 
@@ -21,8 +23,10 @@ void *timer(void *hari_par){
 //        printf("[timer] tick: %d\n", tick);
         sem_wait(&semc);
         if(tick == t+param->timer){
+            sem_wait(&semp);
             printf("[TIMER] denbora agortuta!\n");
             t = tick;
+            sem_post(&semt2);
         }
         sem_post(&semt);
     }

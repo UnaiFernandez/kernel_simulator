@@ -10,7 +10,7 @@
 
 
 
-sem_t semt, semc;
+sem_t semt, semc, semt2, semp;
 
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
 
@@ -20,6 +20,11 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
 
     hariak = malloc(hari_kop * sizeof(pthread_t));
     h_p = malloc(hari_kop * sizeof(struct hari_param));
+
+    printf("\n");
+    printf("\n");
+    printf("Threads created:\n");
+    printf("-----------------------------------------------------------------\n");
 
     for(i = 0; i < hari_kop; i++){
         if(i == 0){
@@ -66,7 +71,10 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
             }
         }
     }
-
+    printf("\n");
+    printf("\n");
+    printf("Clock, timer and process signals:\n");
+    printf("-----------------------------------------------------------------\n");
     for(i = 0;i < hari_kop;i++) // Ume guztiak amaitu arte 
         pthread_join(hariak[i], NULL);
 
@@ -106,12 +114,16 @@ int main(int argc, char *argv[]){
 
     sem_init(&semt, 0, 1);
     sem_init(&semc, 0, 0);
+    sem_init(&semt2, 0, 1);
+    sem_init(&semp, 0, 0);
 
     sortu_hariak(HARIKOP, proz_kop, maiz, tim);
     
     sem_destroy(&semt);
     sem_destroy(&semc);
-    
+    sem_destroy(&semt2);
+    sem_destroy(&semp);
+
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
         waitpid(-1, NULL, 0);
 

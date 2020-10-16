@@ -23,6 +23,7 @@ struct process_control_block{
 
 // tick en azken balioa irakurtzen dela bermatzeko
 extern volatile int tick;
+extern volatile int timtick;
 /*
 #define SEM 1
 #ifdef SEM
@@ -31,4 +32,4 @@ extern volatile int tick;
 
 
 #endif*/
-extern sem_t semt, semc;
+extern sem_t semt, semc, semt2, semp;
