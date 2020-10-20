@@ -14,6 +14,7 @@ void *timer(void *hari_par){
 //    sem_t semt, semc;
     param = (struct hari_param *)hari_par;
     printf("[TIMER] id = %d    name = %s\n", param->id, param->name);
+    sleep(1);
     //int tick;
     t = tick;
 

@@ -13,6 +13,7 @@
 
 sem_t semt, semc, sems, semp;
 
+
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
 
     int i, err;
@@ -22,6 +23,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
     hariak = malloc(hari_kop * sizeof(pthread_t));
     h_p = malloc(hari_kop * sizeof(struct hari_param));
 
+    
     printf("\n");
     printf("\n");
     printf("Threads created:\n");
@@ -72,6 +74,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
             }
         }
     }
+    sleep(1);
     printf("\n");
     printf("\n");
     printf("Clock, timer and process signals:\n");
@@ -88,7 +91,6 @@ int main(int argc, char *argv[]){
     int proz_kop, c, i, maiz, tim;
     char *p;
 
-    srand(time(NULL));
     
     while ((c = getopt (argc, argv, "p:m:t:")) != -1){
         switch (c){
