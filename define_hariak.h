@@ -19,6 +19,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim);
 
 struct process_control_block{
     int pid;
+    int lehen;
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko
@@ -32,4 +33,4 @@ extern volatile int timtick;
 
 
 #endif*/
-extern sem_t semt, semc, semt2, semp;
+extern sem_t semt, semc, semp, sems, semc2, semc3;

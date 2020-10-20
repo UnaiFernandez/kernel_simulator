@@ -19,16 +19,15 @@ void *timer(void *hari_par){
 
     //while(tick != t+param->timer){
     while(1){
+        sem_wait(&semt);
         //sleep(param->maiz);
 //        printf("[timer] tick: %d\n", tick);
-        sem_wait(&semc);
         if(tick == t+param->timer){
-            sem_wait(&semp);
             printf("[TIMER] denbora agortuta!\n");
             t = tick;
-            sem_post(&semt2);
+            sem_post(&sems);
         }
-        sem_post(&semt);
+        //printf("[TIMER] tick read!\n");
     }
 
     printf("[TIMER] loop exit: %d\n", tick);

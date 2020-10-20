@@ -5,12 +5,13 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #include "define_hariak.h"
 
 
 
-sem_t semt, semc, semt2, semp;
+sem_t semt, semc, sems, semp;
 
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
 
@@ -87,7 +88,8 @@ int main(int argc, char *argv[]){
     int proz_kop, c, i, maiz, tim;
     char *p;
 
-
+    srand(time(NULL));
+    
     while ((c = getopt (argc, argv, "p:m:t:")) != -1){
         switch (c){
             case 'p':
@@ -112,18 +114,13 @@ int main(int argc, char *argv[]){
       }
     }
 
-    sem_init(&semt, 0, 1);
-    sem_init(&semc, 0, 0);
-    sem_init(&semt2, 0, 1);
+    sem_init(&semt, 0, 0);
     sem_init(&semp, 0, 0);
-
+    sem_init(&sems, 0, 0);
     sortu_hariak(HARIKOP, proz_kop, maiz, tim);
     
-    sem_destroy(&semt);
-    sem_destroy(&semc);
-    sem_destroy(&semt2);
     sem_destroy(&semp);
-
+    sem_destroy(&semt);
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
         waitpid(-1, NULL, 0);
 

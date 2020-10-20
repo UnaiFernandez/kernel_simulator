@@ -17,17 +17,18 @@ void *clockfunc(void *hari_par){
     
     param = (struct hari_param *)hari_par;
     printf("[CLOCK] id = %d    name = %s\n", param->id, param->name);
+    sleep(1);
     while(1){
         //sleep(1);
         if(t < param->maiz){
             t++;
             //printf("t: %d\n", t);
         }else{
-            sem_wait(&semt);
             t = 0;
             tick++;
             printf("[CLOCK] tick: %d\n", tick);
-            sem_post(&semc);
+            sem_post(&semt);
+            sem_post(&semp);
         }
     }
         printf("sem destroyed\n");
