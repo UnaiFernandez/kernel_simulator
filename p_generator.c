@@ -10,7 +10,7 @@
 
 void *process_generator(void *hari_par){
 
-    int t, id, proz_kop, num, i;
+    int t, j, id, proz_kop, num, i;
     struct hari_param *param;
     struct process_control_block pcb;
 
@@ -20,41 +20,21 @@ void *process_generator(void *hari_par){
     t = tick;
     i = 0;
     proz_kop = param->p_kop;
-    while(i < proz_kop){
+    while(i < TAM){
     //while(1){
         srand(tick*time(NULL));
-        /*sleep(1);
-        id = fork();
-
-        if(id == 0){
-            sem_wait(&semp);
-            pcb.pid = getpid();
-            num = rand();
-            printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, num);
-            exit(0);
-        }
-        else if(id < 0){
-            fprintf(stderr, "Errore bat gertatu da fork exekutatzean.\n");
-            exit(1);
-        }*/
         sem_wait(&semp);
         //printf("[PROCESS GENERATOR] tick read! %d\n", tick);
-        if(tick == t+40){
-            id = fork();
-
-            if(id == 0){
-                pcb.pid = getpid();
-                num = rand()%140;
-                printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, num);
-                exit(0);
-            }
-            else if(id < 0){
-                fprintf(stderr, "Errore bat gertatu da fork exekutatzean.\n");
-                exit(1);
-            }
-            t = tick;
-            i++;
+        pcb.pid = rand() % 100;
+        pcb.lehen = rand()%140;
+        printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, pcb.lehen);
+        sch_arr[i]=pcb;
+        printf("[ ");
+        for(j = 0; j < i; j++){
+            printf("(%d, %d) ", sch_arr[j].pid, sch_arr[j].lehen);
         }
+        printf("]\n");
+        i++;
     }
     pthread_exit(NULL);
 }

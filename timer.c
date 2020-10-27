@@ -22,9 +22,9 @@ void *timer(void *hari_par){
     while(1){
         sem_wait(&semt);
         //sleep(param->maiz);
-//        printf("[timer] tick: %d\n", tick);
+        //printf("[timer] tick: %d\n", tick);
         if(tick == t+param->timer){
-            printf("[TIMER] denbora agortuta!\n");
+        //    printf("[TIMER] denbora agortuta!\n");
             t = tick;
             sem_post(&sems);
         }

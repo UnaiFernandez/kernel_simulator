@@ -2,6 +2,8 @@
 #define HARIKOP 4
 
 #include <semaphore.h>
+#define TAM 15
+
 
 struct hari_param{
     int id;
@@ -34,3 +36,8 @@ extern volatile int timtick;
 
 #endif*/
 extern sem_t semt, semc, semp, sems, semc2, semc3;
+
+
+// prozesu array-a
+extern volatile struct process_control_block *sch_arr;
+

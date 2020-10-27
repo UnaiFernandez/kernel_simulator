@@ -10,6 +10,7 @@
 #include "define_hariak.h"
 
 
+volatile struct process_control_block *sch_arr;
 
 sem_t semt, semc, sems, semp;
 
@@ -19,10 +20,11 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim){
     int i, err;
     pthread_t *hariak;
     struct hari_param *h_p;
-
+    struct process_control_block *pcb;
+    
     hariak = malloc(hari_kop * sizeof(pthread_t));
     h_p = malloc(hari_kop * sizeof(struct hari_param));
-
+    sch_arr = malloc(TAM * sizeof(pcb)); 
     
     printf("\n");
     printf("\n");
@@ -126,5 +128,6 @@ int main(int argc, char *argv[]){
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
         waitpid(-1, NULL, 0);
 
+    free((void *)sch_arr);
     return(0);
 }
