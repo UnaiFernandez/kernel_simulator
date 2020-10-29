@@ -10,17 +10,16 @@
 
 void *process_generator(void *hari_par){
 
-    int t, j, id, proz_kop, num, i;
+    int k, j, i;
     struct hari_param *param;
-    struct process_control_block pcb;
+    struct process_control_block pcb, atera;
 
     param = (struct hari_param *)hari_par;
     printf("[PROCESS GENERATOR] id = %d    name = %s\n", param->id, param->name);
     sleep(1);
-    t = tick;
+    //t = tick;
     i = 0;
-    proz_kop = param->p_kop;
-    while(i < TAM){
+    while(i <= TAM){
     //while(1){
         srand(tick*time(NULL));
         sem_wait(&semp);
@@ -29,8 +28,16 @@ void *process_generator(void *hari_par){
         pcb.lehen = rand()%140;
         printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, pcb.lehen);
         sch_arr[i]=pcb;
+        atera = sch_arr[0];
+        printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
+        if(i == TAM){
+            for(k = 0; k < TAM; k++){
+                sch_arr[k] = sch_arr[k+1]; 
+            }
+            i = i - 1;
+        }
         printf("[ ");
-        for(j = 0; j < i; j++){
+        for(j = 0; j <= i; j++){
             printf("(%d, %d) ", sch_arr[j].pid, sch_arr[j].lehen);
         }
         printf("]\n");

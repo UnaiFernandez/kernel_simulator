@@ -23,7 +23,7 @@ void *clockfunc(void *hari_par){
             t++;
             //printf("t: %d\n", t);
         }else{
-            sleep(1);
+//            sleep(1);
             t = 0;
             tick++;
             printf("[CLOCK] tick: %d\n", tick);

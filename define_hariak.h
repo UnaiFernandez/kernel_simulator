@@ -1,8 +1,11 @@
 /*MAIN PROGRAMAKO DEFINIZIOAK*/
+#ifndef _define_hariak_h
+#define _define_hariak_h
+
 #define HARIKOP 4
 
 #include <semaphore.h>
-#define TAM 15
+#define TAM 4
 
 
 struct hari_param{
@@ -40,4 +43,5 @@ extern sem_t semt, semc, semp, sems, semc2, semc3;
 
 // prozesu array-a
 extern volatile struct process_control_block *sch_arr;
+#endif
 

@@ -11,7 +11,7 @@ function build()
 end
 function exec()
     build()
-    lmake_exec("binaries/seso -p 10 -m 5000000 -t 40")
+    lmake_exec("binaries/seso -p 10 -m 10000000 -t 40")
 end
 function clean()
     lmake_exec("rm binaries/clock.c.o") 
