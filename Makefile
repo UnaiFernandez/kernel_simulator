@@ -2,16 +2,16 @@
 
 CC = gcc
 CFLAGS = -pthread
-OBJ = binaries/main
+OBJ = binaries/seso
 
 all:
-		$(CC) main.c sched_disp.c timer.c clock.c p_generator.c -o $(OBJ) $(CFLAGS)
+		$(CC) src/main.c src/sched_disp.c src/timer.c src/clock.c src/p_generator.c -o $(OBJ) $(CFLAGS)
 exec:
-		./binaries/main -p 10 -m 10000000 -t 40
+		./binaries/seso -p 10 -m 10000000 -t 40
 execf:
-		./binaries/main -p 10 -m 100000 -t 10 > binaries/file
+		./binaries/seso -p 10 -m 100000 -t 10 > binaries/file
 
 clean:
-		rm -rf binaries/main
+		rm -rf binaries/seso
 		rm -rf *.o
 
