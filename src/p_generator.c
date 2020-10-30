@@ -26,21 +26,21 @@ void *process_generator(void *hari_par){
         //printf("[PROCESS GENERATOR] tick read! %d\n", tick);
         pcb.pid = rand() % 100;
         pcb.lehen = rand()%140;
-        printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, pcb.lehen);
+//        printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, pcb.lehen);
         sch_arr[i]=pcb;
         atera = sch_arr[0];
-        printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
+//        printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
         if(i == TAM){
             for(k = 0; k < TAM; k++){
                 sch_arr[k] = sch_arr[k+1]; 
             }
             i = i - 1;
         }
-        printf("[ ");
+        /*printf("[ ");
         for(j = 0; j <= i; j++){
             printf("(%d, %d) ", sch_arr[j].pid, sch_arr[j].lehen);
         }
-        printf("]\n");
+        printf("]\n");*/
         i++;
     }
     pthread_exit(NULL);

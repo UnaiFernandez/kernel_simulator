@@ -27,6 +27,9 @@ void *timer(void *hari_par){
         //    printf("[TIMER] denbora agortuta!\n");
             t = tick;
             sem_post(&sems);
+            sem_post(&sems);
+            sem_post(&sems);
+            sem_post(&sems);
         }
         //printf("[TIMER] tick read!\n");
     }

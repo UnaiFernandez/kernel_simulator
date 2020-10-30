@@ -16,7 +16,7 @@ void *scheduler_dispatcher(void *hari_par){
     sleep(1);
     while(1){
         sem_wait(&sems);
-        printf("[SCHEDULER/DISPATCHER] tick read!\n");
+        printf("[SCHEDULER/DISPATCHER %d] tick read!\n", param->id);
         //sem_post(&semt);
     }
     pthread_exit(NULL);

@@ -7,9 +7,9 @@ OBJ = binaries/seso
 all:
 		$(CC) src/main.c src/sched_disp.c src/timer.c src/clock.c src/p_generator.c -o $(OBJ) $(CFLAGS)
 exec:
-		./binaries/seso -p 10 -m 10000000 -t 40
+		./binaries/seso -p 10 -m 10000000 -t 40 -c 4
 execf:
-		./binaries/seso -p 10 -m 100000 -t 10 > binaries/file
+		./binaries/seso -p 10 -m 100000 -t 10 -c 4 > binaries/file
 
 clean:
 		rm -rf binaries/seso
