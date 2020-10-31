@@ -10,7 +10,7 @@ volatile int timtick = 0;
 void *timer(void *hari_par){
 
     struct hari_param *param;
-    int t;
+    int t, i;
 //    sem_t semt, semc;
     param = (struct hari_param *)hari_par;
     printf("[TIMER] id = %d    name = %s\n", param->id, param->name);
@@ -26,9 +26,7 @@ void *timer(void *hari_par){
         if(tick == t+param->timer){
         //    printf("[TIMER] denbora agortuta!\n");
             t = tick;
-            sem_post(&sems);
-            sem_post(&sems);
-            sem_post(&sems);
+            //se puede hacer un for to wapo???
             sem_post(&sems);
         }
         //printf("[TIMER] tick read!\n");

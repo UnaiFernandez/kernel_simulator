@@ -15,6 +15,7 @@ struct hari_param{
     int p_kop;
     int maiz;
     int timer;
+    int core_kop;
 };
 
 void *scheduler_dispatcher(void *hari_param);
@@ -46,9 +47,9 @@ extern sem_t semt, semc, semp, sems, semc2, semc3;
 extern volatile struct process_control_block *sch_arr;
 
 struct core_t{
-    node lehentasuna[140];
-    node hari_1[1];
-    node hari_2[1];
+    struct node lehentasuna[140];
+    struct node hari_1[1];
+    struct node hari_2[1];
 };
 #endif
 

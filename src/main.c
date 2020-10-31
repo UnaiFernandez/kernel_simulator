@@ -71,6 +71,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     for(j = 3; j < c_kop; j++){
         h_p[j].name = "Scheduler/Dispatcher";
         h_p[j].id = j;
+        h_p[j].core_kop = core_kop;
         err = pthread_create(&hariak[j], NULL, scheduler_dispatcher, (void *)&h_p[j]);;
 
         if(err > 0){

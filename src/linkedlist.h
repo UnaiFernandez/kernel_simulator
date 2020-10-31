@@ -1,3 +1,4 @@
+#include <stdbool.h>
 
 struct node {
    int data;
