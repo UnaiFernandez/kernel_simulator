@@ -26,7 +26,7 @@ void *clockfunc(void *hari_par){
 //            sleep(1);
             t = 0;
             tick++;
-            printf("[CLOCK] tick: %d\n", tick);
+//            printf("[CLOCK] tick: %d\n", tick);
             sem_post(&semt);
             sem_post(&semp);
         }

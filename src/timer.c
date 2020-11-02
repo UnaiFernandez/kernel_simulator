@@ -24,13 +24,15 @@ void *timer(void *hari_par){
         //sleep(param->maiz);
         //printf("[timer] tick: %d\n", tick);
         if(tick == t+param->timer){
-        //    printf("[TIMER] denbora agortuta!\n");
+            printf("[TIMER] denbora agortuta!\n");
             t = tick;
             //se puede hacer un for to wapo???
             sem_post(&sems);
             sem_post(&sems);
+            sem_post(&sems);
+            sem_post(&sems);
         }
-        printf("[TIMER] tick read!\n");
+        //printf("[TIMER] tick read!\n");
     }
 
     printf("[TIMER] loop exit: %d\n", tick);
