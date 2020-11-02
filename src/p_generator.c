@@ -23,7 +23,7 @@ void *process_generator(void *hari_par){
     //while(1){
         srand(tick*time(NULL));
         sem_wait(&semp);
-        //printf("[PROCESS GENERATOR] tick read! %d\n", tick);
+        printf("[PROCESS GENERATOR] tick read! %d\n", tick);
         pcb.pid = rand() % 100;
         pcb.lehen = rand()%140;
 //        printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, pcb.lehen);

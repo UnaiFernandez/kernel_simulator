@@ -30,8 +30,9 @@ void *clockfunc(void *hari_par){
             sem_post(&semc);
         }
     }
-        printf("sem destroyed\n");
+        printf("sem has been destroyed\n");
     pthread_exit(NULL);
 }
 
 printf("Kaixo hau proba bat da!");
+printf("Kaixo hau beste proba bat da!");

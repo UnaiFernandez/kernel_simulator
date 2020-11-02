@@ -28,8 +28,9 @@ void *timer(void *hari_par){
             t = tick;
             //se puede hacer un for to wapo???
             sem_post(&sems);
+            sem_post(&sems);
         }
-        //printf("[TIMER] tick read!\n");
+        printf("[TIMER] tick read!\n");
     }
 
     printf("[TIMER] loop exit: %d\n", tick);
