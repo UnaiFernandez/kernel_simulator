@@ -21,21 +21,19 @@ void *timer(void *hari_par){
     //while(tick != t+param->timer){
     while(1){
         sem_wait(&semt);
-        //sleep(param->maiz);
-        //printf("[timer] tick: %d\n", tick);
-        if(tick == t+param->timer){
-            printf("[TIMER] denbora agortuta!\n");
-            t = tick;
-            //se puede hacer un for to wapo???
-            sem_post(&sems);
-            sem_post(&sems);
-            sem_post(&sems);
-            sem_post(&sems);
-        }
         //printf("[TIMER] tick read!\n");
+        //sleep(param->maiz);
+        printf("[timer] tick: %d\n", tick);
+        if(tick == t+param->timer){
+//            printf("[TIMER]\n");
+            t = tick;
+//            printf("[proba] %d corekop\n", param->core_kop);
+            for (i = 0; i < param->core_kop; i++)
+                sem_post(&sems);
+        }
     }
 
-    printf("[TIMER] loop exit: %d\n", tick);
+//    printf("[TIMER] loop exit: %d\n", tick);
     t = tick;
     pthread_exit(NULL);
 }

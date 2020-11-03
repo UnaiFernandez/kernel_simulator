@@ -5,7 +5,6 @@
 #define HARIKOP 4
 
 #include <semaphore.h>
-#include "linkedlist.h"
 #define TAM 4
 
 
@@ -46,10 +45,5 @@ extern sem_t semt, semc, semp, sems, semc2, semc3;
 // prozesu array-a
 extern volatile struct process_control_block *sch_arr;
 
-struct core_t{
-    struct node lehentasuna[140];
-    struct node hari_1[1];
-    struct node hari_2[1];
-};
 #endif
 

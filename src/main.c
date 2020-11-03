@@ -47,6 +47,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
             h_p[i].name = "Timer";
             h_p[i].id = i;
             h_p[i].timer = tim;
+            h_p[i].core_kop = core_kop;
             err = pthread_create(&hariak[i], NULL, timer, (void *)&h_p[i]);;
 
             if(err > 0){
