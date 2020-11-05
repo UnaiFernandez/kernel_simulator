@@ -1,22 +1,12 @@
 // Implementing Red-Black Tree in C
+#include "rbtree.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-enum nodeColor {
-  RED,
-  BLACK
-};
-
-struct rbNode {
-  int data, color;
-  struct rbNode *link[2];
-};
 
 struct rbNode *root = NULL;
 
+
 // Create a red-black tree
-struct rbNode *createNode(int data) {
+struct rbNode *createNode(struct process_control_block data) {
   struct rbNode *newnode;
   newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
   newnode->data = data;
@@ -25,8 +15,9 @@ struct rbNode *createNode(int data) {
   return newnode;
 }
 
+
 // Insert an node
-void insertion(int data) {
+void insertion(struct process_control_block data) {
   struct rbNode *stack[98], *ptr, *newnode, *xPtr, *yPtr;
   int dir[98], ht = 0, index;
   ptr = root;
@@ -38,11 +29,11 @@ void insertion(int data) {
   stack[ht] = root;
   dir[ht++] = 0;
   while (ptr != NULL) {
-    if (ptr->data == data) {
+    if (ptr->data.pid == data.pid) {    //--------------------------------------------------------Ojo atençao aca pode estar el error!
       printf("Duplicates Not Allowed!!\n");
       return;
     }
-    index = (data - ptr->data) > 0 ? 1 : 0;
+    index = (data.pid - ptr->data.pid) > 0 ? 1 : 0; //--------------------------------------------Ojo atençao aca pode estar el error!
     stack[ht] = ptr;
     ptr = ptr->link[index];
     dir[ht++] = index;
@@ -93,7 +84,7 @@ void insertion(int data) {
           yPtr->link[1] = xPtr;
           stack[ht - 2]->link[1] = yPtr;
         }
-        xPtr = stack[ht - 2];
+    xPtr = stack[ht - 2];
         yPtr->color = BLACK;
         xPtr->color = RED;
         xPtr->link[1] = yPtr->link[0];
@@ -111,7 +102,7 @@ void insertion(int data) {
 }
 
 // Delete a node
-void deletion(int data) {
+void deletion(struct process_control_block data) {
   struct rbNode *stack[98], *ptr, *xPtr, *yPtr;
   struct rbNode *pPtr, *qPtr, *rPtr;
   int dir[98], ht = 0, diff, i;
@@ -124,9 +115,9 @@ void deletion(int data) {
 
   ptr = root;
   while (ptr != NULL) {
-    if ((data - ptr->data) == 0)
+    if ((data.pid - ptr->data.pid) == 0)
       break;
-    diff = (data - ptr->data) > 0 ? 1 : 0;
+    diff = (data.pid - ptr->data.pid) > 0 ? 1 : 0;
     stack[ht] = ptr;
     dir[ht++] = diff;
     ptr = ptr->link[diff];
@@ -309,14 +300,14 @@ void deletion(int data) {
 void inorderTraversal(struct rbNode *node) {
   if (node) {
     inorderTraversal(node->link[0]);
-    printf("%d  ", node->data);
+    printf("%d  ", node->data.pid);
     inorderTraversal(node->link[1]);
   }
   return;
 }
 
 // Driver code
-int main() {
+/*int main() {
   int ch, data;
   while (1) {
     printf("1. Insertion\t2. Deletion\n");
@@ -347,4 +338,4 @@ int main() {
     printf("\n");
   }
   return 0;
-}
+}*/

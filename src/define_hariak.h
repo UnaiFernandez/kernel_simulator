@@ -5,8 +5,8 @@
 #define HARIKOP 4
 
 #include <semaphore.h>
+#include <pthread.h>
 #define TAM 4
-
 
 struct hari_param{
     int id;
@@ -41,7 +41,11 @@ extern volatile int timtick;
 #endif*/
 extern sem_t semt, semc, semp, sems, semc2, semc3;
 
-
+// timer eta schedulerraren sinkronizaziorako
+extern pthread_mutex_t mutex;
+extern pthread_cond_t cond;
+extern pthread_cond_t cond2;
+extern int done;
 // prozesu array-a
 extern volatile struct process_control_block *sch_arr;
 
