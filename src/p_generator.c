@@ -18,8 +18,8 @@ void *process_generator(void *hari_par){
      
 
     param = (struct hari_param *)hari_par;
-    printf("[PROCESS GENERATOR] id = %d    name = %s\n", param->id, param->name);
-    sleep(1);
+    printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
+    sleep(2);
     //t = tick;
     p_kop = param->p_kop;
     i = 0;
@@ -74,6 +74,6 @@ void *process_generator(void *hari_par){
         p++;
     }
 //    inorderTraversal(root);    
-    printf("\n");
+//    printf("\n");
     pthread_exit(NULL);
 }

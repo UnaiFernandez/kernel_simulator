@@ -49,5 +49,14 @@ extern int done;
 // prozesu array-a
 extern volatile struct process_control_block *sch_arr;
 
+
+//core struct
+
+struct core_t{
+    struct rbNode *root; 
+    int core_num;
+    struct process_control_block hari1[1];
+    struct process_control_block hari2[1];
+};
 #endif
 

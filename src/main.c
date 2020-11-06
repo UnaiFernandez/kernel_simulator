@@ -28,8 +28,8 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
 
     printf("\n");
     printf("\n");
-    printf("Threads created:\n");
-    printf("-----------------------------------------------------------------\n");
+    printf("Creating threads...\n");
+    printf("----------------------------------------------------------------\n");
 
     for(i = 0; i < hari_kop; i++){
         if(i == 0){
@@ -81,10 +81,12 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
         }
     }
     sleep(1);
+    printf("----------------------------------------------------------------\n");
+    printf("\n");
     printf("\n");
     printf("\n");
     printf("Clock, timer and process signals:\n");
-    printf("-----------------------------------------------------------------\n");
+    printf("----------------------------------------------------------------\n");
     hari_kop = hari_kop + core_kop;
     for(i = 0;i < hari_kop-1;i++) // Ume guztiak amaitu arte 
         pthread_join(hariak[i], NULL);

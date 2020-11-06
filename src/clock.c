@@ -16,7 +16,7 @@ void *clockfunc(void *hari_par){
     int t = 0;
     
     param = (struct hari_param *)hari_par;
-    printf("[CLOCK] id = %d    name = %s\n", param->id, param->name);
+    printf("[CLOCK:                   id = %d    name = %s               ]\n", param->id, param->name);
     sleep(1);
     while(1){
         if(t < param->maiz){
