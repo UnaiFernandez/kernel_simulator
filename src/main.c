@@ -130,11 +130,12 @@ int main(int argc, char *argv[]){
 
     sem_init(&semt, 0, 0);
     sem_init(&semp, 0, 0);
-    //sem_init(&sems, 0, core_kop);
     sem_init(&sems, 0, 0);
+    sem_init(&semc, 0, 0);
     sortu_hariak(HARIKOP, proz_kop, maiz, tim, core_kop);
     
     sem_destroy(&semp);
+    sem_destroy(&semc);
     sem_destroy(&semt);
     sem_destroy(&sems);
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 

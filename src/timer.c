@@ -14,7 +14,7 @@ int done = 0;
 void *timer(void *hari_par){
 
     struct hari_param *param;
-    int t, i;
+    int t;
     param = (struct hari_param *)hari_par;
     printf("[TIMER:                   id = %d    name = %s               ]\n", param->id, param->name);
     //sleep(1);
@@ -27,6 +27,7 @@ void *timer(void *hari_par){
         if(tick == t+param->timer){
             pthread_mutex_lock(&mutex);
             printf("[TIMER] seinalea bidalita\n");
+            fflush(stdout);
             while(done < param->core_kop)
                 pthread_cond_wait(&cond, &mutex);
             t = tick;

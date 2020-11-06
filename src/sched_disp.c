@@ -23,8 +23,10 @@ void *scheduler_dispatcher(void *hari_par){
         done++;
         printf("---------core%d---------\n", core_num);
         printf("[SCHEDULER/DISPATCHER %d] tick read!\n", param->id);
+        fflush(stdout);
         pthread_cond_signal(&cond);
         pthread_cond_wait(&cond2, &mutex);
+        pthread_mutex_unlock(&mutex);
     }
     pthread_exit(NULL);
 }
