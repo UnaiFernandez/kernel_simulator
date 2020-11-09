@@ -97,7 +97,8 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
 
 int main(int argc, char *argv[]){
 
-    int proz_kop, c, i, maiz, tim, core_kop;
+    int proz_kop, c, i, maiz, tim, core_kop, maizMHz;
+    float periodoa;
     char *p;
 
     
@@ -128,11 +129,20 @@ int main(int argc, char *argv[]){
       }
     }
 
+    maizMHz = maiz * 1000000;
+    periodoa = (1.0/maizMHz)*1000000000.0;
+
+    printf("\n");
+    printf("\n");
+    printf("Parametroak:\n");
+    printf("----------------------------------------------------------------\n");
+    printf("[Maiztasuna: %d MHz", maiz);
+    printf("    Periodoa: %.0f ns]\n", periodoa);
     sem_init(&semt, 0, 0);
     sem_init(&semp, 0, 0);
-    sem_init(&sems, 0, 0);
+    sem_init(&sems, 0, 1);
     sem_init(&semc, 0, 0);
-    sortu_hariak(HARIKOP, proz_kop, maiz, tim, core_kop);
+    sortu_hariak(HARIKOP, proz_kop, maizMHz, tim, core_kop);
     
     sem_destroy(&semp);
     sem_destroy(&semc);

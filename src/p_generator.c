@@ -8,6 +8,13 @@
 #include "rbtree.h"
 
 
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond1 = PTHREAD_COND_INITIALIZER;
+pthread_cond_t cond12 = PTHREAD_COND_INITIALIZER;
+int egina = 0;
+
+
+
 
 void *process_generator(void *hari_par){
 
@@ -16,11 +23,10 @@ void *process_generator(void *hari_par){
     struct hari_param *param;
     struct process_control_block pcb, atera;
     
-     
-
+    
     param = (struct hari_param *)hari_par;
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
-    sleep(1);
+    //sleep(1);
     //t = tick;
     p_kop = param->p_kop;
     i = 0;
@@ -33,9 +39,9 @@ void *process_generator(void *hari_par){
         sem_wait(&semp);
 
         if(p <= p_kop){
-            printf("[PROCESS GENERATOR] tick read! %d\n", tick);
+//            printf("[PROCESS GENERATOR] tick read! %d\n", tick);
             pcb.pid = rand() % 100;
-            pcb.lehen = (rand() % (upper - lower + 1)) + lower;
+            pcb.weight = (rand() % (upper - lower + 1)) + lower;
 //            printf("[PROCESS GENERATOR] Ni ume bat naiz, nire identifikatzailea %d da, eta lehentasuna %d da\n", pcb.pid, pcb.lehen);
             sch_arr[i]=pcb;
         }
@@ -46,14 +52,15 @@ void *process_generator(void *hari_par){
                 }
                 atera = sch_arr[0];
                 printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
-//                insertion(atera);
+                //sem_wait(&sems);
+                insertion(atera);
                 i--;
             }
-            printf("[ ");
+/*            printf("[ ");
             for(j = 0; j <= i; j++){
                 printf("(%d, %d) ", sch_arr[j].pid, sch_arr[j].lehen);
             }
-            printf("]\n");
+            printf("]\n");*/
 
         }else{
             while(tam != 0){
@@ -62,19 +69,20 @@ void *process_generator(void *hari_par){
             }
             tam--;
             atera = sch_arr[0];
-            printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
-//            insertion(atera);
-            printf("[ ");
+//            printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
+            //sem_wait(&sems);
+            insertion(atera);
+/*            printf("[ ");
             for(j = 0; j <= tam; j++){
                 printf("(%d, %d) ", sch_arr[j].pid, sch_arr[j].lehen);
             }
-            printf("]\n");
+            printf("]\n");*/
             }
         }
         i++;
         p++;
     }
-//    inorderTraversal(root);    
-    printf("\n");
+    //inorderTraversal(root);    
+    //printf("\n");
     pthread_exit(NULL);
 }

@@ -3,6 +3,7 @@
 
 
 struct rbNode *root = NULL;
+struct rbNode *leftmost = NULL;
 
 
 // Create a red-black tree
@@ -30,7 +31,7 @@ void insertion(struct process_control_block data) {
   dir[ht++] = 0;
   while (ptr != NULL) {
     if (ptr->data.pid == data.pid) {    //--------------------------------------------------------Ojo atençao aca pode estar el error!
-      printf("Duplicates Not Allowed!!\n");
+      //printf("Duplicates Not Allowed!!\n");
       return;
     }
     index = (data.pid - ptr->data.pid) > 0 ? 1 : 0; //--------------------------------------------Ojo atençao aca pode estar el error!
@@ -306,9 +307,24 @@ void inorderTraversal(struct rbNode *node) {
   return;
 }
 
+
+void getLeftMost(struct rbNode *node) {
+  if (node) {
+    getLeftMost(node->link[0]);
+    if(node->link[0] == NULL){
+        leftmost = node;
+    }
+  }      
+  return;
+}
+
+struct process_control_block leftMost(){
+    return leftmost->data;
+}
 // Driver code
 /*int main() {
-  int ch, data;
+  int ch;
+  struct process_control_block data, a;
   while (1) {
     printf("1. Insertion\t2. Deletion\n");
     printf("3. Traverse\t4. Exit");
@@ -317,7 +333,7 @@ void inorderTraversal(struct rbNode *node) {
     switch (ch) {
       case 1:
         printf("Enter the element to insert:");
-        scanf("%d", &data);
+        scanf("%d", &data.pid);
         insertion(data);
         break;
       case 2:
@@ -330,6 +346,12 @@ void inorderTraversal(struct rbNode *node) {
         printf("\n");
         break;
       case 4:
+        getLeftMost(root);
+        a = leftMost();
+        printf("%d   ", leftmost->data.pid);
+        printf("%d   ", a.pid);
+        break;
+      case 5:
         exit(0);
       default:
         printf("Not available\n");

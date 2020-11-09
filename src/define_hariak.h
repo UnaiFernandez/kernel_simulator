@@ -6,7 +6,7 @@
 
 #include <semaphore.h>
 #include <pthread.h>
-#define TAM 4
+#define TAM 12
 
 struct hari_param{
     int id;
@@ -25,7 +25,9 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
 
 struct process_control_block{
     int pid;
-    int lehen;
+    int weight;
+    int vruntime;
+    float decay_factor;
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko
@@ -46,9 +48,13 @@ extern pthread_mutex_t mutex;
 extern pthread_cond_t cond;
 extern pthread_cond_t cond2;
 extern int done;
+
+extern pthread_mutex_t mutex1;
+extern pthread_cond_t cond1;
+extern pthread_cond_t cond12;
+extern int egina;
 // prozesu array-a
 extern volatile struct process_control_block *sch_arr;
-
 
 //core struct
 
@@ -68,5 +74,7 @@ static const int weight[40] = {
 /* 5 */ 335, 272, 215, 172, 137,
 /* 10 */ 110, 87, 70, 56, 45,
 /* 15 */ 36, 29, 23, 18, 15};
+
+
 #endif
 

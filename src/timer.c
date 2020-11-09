@@ -25,12 +25,14 @@ void *timer(void *hari_par){
 //        printf("[TIMER] tick read!\n");
 //        printf("[timer] tick: %d\n", tick);
         if(tick == t+param->timer){
+            printf("\n");
             pthread_mutex_lock(&mutex);
             printf("[TIMER] seinalea bidalita\n");
             fflush(stdout);
             while(done < param->core_kop)
                 pthread_cond_wait(&cond, &mutex);
             t = tick;
+            printf("\n");
             done = 0;
             pthread_cond_broadcast(&cond2);
             pthread_mutex_unlock(&mutex);
