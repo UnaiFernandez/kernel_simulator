@@ -30,11 +30,11 @@ void insertion(struct process_control_block data) {
   stack[ht] = root;
   dir[ht++] = 0;
   while (ptr != NULL) {
-    if (ptr->data.pid == data.pid) {    //--------------------------------------------------------Ojo atençao aca pode estar el error!
-      //printf("Duplicates Not Allowed!!\n");
+    if (ptr->data.pid == data.pid) {   
+        //printf("Duplicates Not Allowed!!\n");
       return;
     }
-    index = (data.pid - ptr->data.pid) > 0 ? 1 : 0; //--------------------------------------------Ojo atençao aca pode estar el error!
+    index = (data.pid - ptr->data.pid) > 0 ? 1 : 0; 
     stack[ht] = ptr;
     ptr = ptr->link[index];
     dir[ht++] = index;

@@ -15,6 +15,7 @@ enum nodeColor {
 
 struct rbNode {
   int color;
+  int tamaina;
   struct process_control_block data;
   struct rbNode *link[2];
 };

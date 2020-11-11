@@ -55,12 +55,13 @@ extern pthread_cond_t cond12;
 extern int egina;
 // prozesu array-a
 extern volatile struct process_control_block *sch_arr;
-
+extern int tam_arr;
 //core struct
 
 struct core_t{
     struct rbNode *root; 
     int core_num;
+    int tamaina;
     struct process_control_block hari1[1];
     struct process_control_block hari2[1];
 };
