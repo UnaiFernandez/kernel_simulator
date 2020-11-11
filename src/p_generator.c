@@ -8,6 +8,27 @@
 #include "rbtree.h"
 
 
+int min = 0;
+
+
+int getMin(int *arr, int kop){
+    int i, id, min = 10000000;
+
+    for(i = 0; i < kop; i++){
+        if(arr[i] <= min){
+            min = arr[i];
+            id=i;
+        }
+    }
+    return id;
+}
+
+void initArray(int *arr){
+    int i;
+    for(i = 0; i < MAX_CORE_KOP; i++){
+        arr[i] = 0;
+    }
+}
 
 void *process_generator(void *hari_par){
 
@@ -15,7 +36,6 @@ void *process_generator(void *hari_par){
     int lower = -20, upper = 15, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb, atera;
-    
     
     param = (struct hari_param *)hari_par;
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
@@ -25,6 +45,8 @@ void *process_generator(void *hari_par){
     i = 0;
     p = 0;
     tam = TAM;
+
+    initArray(tam_arr);
     while(i <= tam){
     //while(1){
         srand(tick*time(NULL));
@@ -47,7 +69,7 @@ void *process_generator(void *hari_par){
                 atera = sch_arr[0];
                 //printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
                 sem_wait(&sems);
-                insertion(atera);
+                min = getMin(tam_arr, param->core_kop);
                 i--;
             }
 /*            printf("[ ");
@@ -65,7 +87,7 @@ void *process_generator(void *hari_par){
             atera = sch_arr[0];
 //            printf("[PROCESS GENERATOR]: %d corera doa!\n", atera.pid);
             sem_wait(&sems);
-            insertion(atera);
+            min = getMin(tam_arr, param->core_kop);
 /*            printf("[ ");
             for(j = 0; j <= tam; j++){
                 printf("(%d, %d) ", sch_arr[j].pid, sch_arr[j].lehen);
@@ -82,13 +104,4 @@ void *process_generator(void *hari_par){
 }
 
 
-int getMin(int *arr, int kop){
-    int i, min = 10000000;
 
-    for(i = 0; i < kop; i++){
-        if(arr[i] <= min){
-            min = arr[i];
-        }
-    }
-    return min;
-}

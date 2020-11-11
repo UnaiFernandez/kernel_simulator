@@ -3,6 +3,7 @@
 #define _define_hariak_h
 
 #define HARIKOP 4
+#define MAX_CORE_KOP 32
 
 #include <semaphore.h>
 #include <pthread.h>
@@ -55,7 +56,8 @@ extern pthread_cond_t cond12;
 extern int egina;
 // prozesu array-a
 extern volatile struct process_control_block *sch_arr;
-extern int tam_arr;
+extern int tam_arr[MAX_CORE_KOP];
+extern int min;
 //core struct
 
 struct core_t{
