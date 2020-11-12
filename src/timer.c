@@ -36,8 +36,7 @@ void *timer(void *hari_par){
             done = 0;
             pthread_cond_broadcast(&cond2);
             pthread_mutex_unlock(&mutex);
-//            for (i = 0; i < param->core_kop; i++)
-//                sem_post(&sems);
+            sem_post(&semp);
         }
     }
     t = tick;

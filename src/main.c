@@ -10,7 +10,7 @@
 #include "define_hariak.h"
 
 
-volatile struct process_control_block *sch_arr;
+struct process_control_block *sch_arr;
 int *arr;
 
 sem_t semt, semc, sems, semp;
@@ -25,7 +25,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     
     hariak = malloc((hari_kop + core_kop) * sizeof(pthread_t));
     h_p = malloc((hari_kop + core_kop) * sizeof(struct hari_param));
-    sch_arr = malloc(TAM * sizeof(pcb));
+    sch_arr = malloc(proz_kop * sizeof(pcb));
     arr = malloc(core_kop * sizeof(int));
 
     printf("\n");
@@ -38,6 +38,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
             h_p[i].name = "Process Generator";
             h_p[i].id = i;
             h_p[i].p_kop = proz_kop;
+            h_p[i].core_kop = core_kop;
             err = pthread_create(&hariak[i], NULL, process_generator, (void *)&h_p[i]);;
 
             if(err > 0){
@@ -75,6 +76,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
         h_p[j].name = "Scheduler/Dispatcher";
         h_p[j].id = j;
         h_p[j].core_kop = core_kop;
+        h_p[j].timer = tim;
         err = pthread_create(&hariak[j], NULL, scheduler_dispatcher, (void *)&h_p[j]);;
 
         if(err > 0){

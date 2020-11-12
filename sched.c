@@ -39,19 +39,28 @@ void *scheduler_dispatcher(void *hari_par){
             if(atera.pid != 555 && minimum == core_num){
                 if(core.tamaina == 0){
                     root = new_node(atera);
+                    exec = root;
                     core.tamaina++;
                 }else{
                     insert(root, atera);
+                    exec = find_minimum(root);
                     core.tamaina++;
+                    //printf("vruntime:  %d\n", exec->data.vruntime);
+                    //if(exec->data.vruntime > 0){
+                    //    delete(root, exec->data);
+                    //    exec = new;
+                    //}
                 }
                 tam_arr[core_num] = core.tamaina;
             }
             //printf("[SCHEDULER/DISPATCHER %d] tick read!\n", param->id);
-            printf("---------core%d---------     [ %d ]\n", core_num, atera.pid);
-            fflush(stdout);
+            printf("---------core%d---------     thread 1: [ id:%d vrt:%d ]\n", core_num, exec->data.pid, exec->data.vruntime);
+            vrunt = exec->data.vruntime;
+            vrunt = vrunt - param->timer;
+            exec->data.vruntime = vrunt;
             inorder(root);
             printf("\n");
-            sem_post(&sems);
+            //sem_post(&sems);
         }
         pthread_cond_signal(&cond);
         pthread_cond_wait(&cond2, &mutex);

@@ -7,7 +7,9 @@
 
 #include <semaphore.h>
 #include <pthread.h>
-#define TAM 12
+#define TAM 10
+
+#define weight0 1024
 
 struct hari_param{
     int id;
@@ -50,18 +52,15 @@ extern pthread_cond_t cond;
 extern pthread_cond_t cond2;
 extern int done;
 
-extern pthread_mutex_t mutex1;
-extern pthread_cond_t cond1;
-extern pthread_cond_t cond12;
-extern int egina;
 // prozesu array-a
-extern volatile struct process_control_block *sch_arr;
+extern struct process_control_block *sch_arr;
 extern int tam_arr[MAX_CORE_KOP];
-extern int min;
+extern int minimum;
+extern struct process_control_block atera;
 //core struct
 
 struct core_t{
-    struct rbNode *root; 
+    struct node *root; 
     int core_num;
     int tamaina;
     struct process_control_block hari1[1];

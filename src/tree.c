@@ -23,6 +23,12 @@ struct node* find_minimum(struct node *root)
     return root;
 }
 
+struct process_control_block get_min(struct node *root){
+    struct node *min;
+    min = find_minimum(root);
+    return min->data;
+}
+
 //function to create a node
 struct node* new_node(struct process_control_block x)
 {
@@ -91,15 +97,18 @@ struct node* delete(struct node *root, struct process_control_block x)
 
 void inorder(struct node *root)
 {
+    char a[20];
     if(root!=NULL) // checking if the root is not null
     {
         inorder(root->left_child); // visiting left child
-        printf(" %d ", root->data.vruntime); // printing data at root
+        printf(" %d ", root->data.pid); // printing data at root
         inorder(root->right_child);// visiting right child
+    }else{
+        printf("");
     }
 }
 
-int main()
+/*int main()
 {
     struct process_control_block pcb;
     struct process_control_block manolito;
@@ -114,4 +123,4 @@ int main()
     inorder(root);
     printf("\n");
     return 0;
-}
+}*/
