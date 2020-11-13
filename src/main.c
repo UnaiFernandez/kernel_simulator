@@ -11,6 +11,7 @@
 
 
 struct process_control_block *sch_arr;
+int sch_arr_tam = 0;
 int *arr;
 
 sem_t semt, semc, sems, semp;
@@ -27,6 +28,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     h_p = malloc((hari_kop + core_kop) * sizeof(struct hari_param));
     sch_arr = malloc(proz_kop * sizeof(pcb));
     arr = malloc(core_kop * sizeof(int));
+    sch_arr_tam = proz_kop;
 
     printf("\n");
     printf("\n");
@@ -77,6 +79,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
         h_p[j].id = j;
         h_p[j].core_kop = core_kop;
         h_p[j].timer = tim;
+        h_p[i].p_kop = proz_kop;
         err = pthread_create(&hariak[j], NULL, scheduler_dispatcher, (void *)&h_p[j]);;
 
         if(err > 0){

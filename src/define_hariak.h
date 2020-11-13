@@ -54,6 +54,7 @@ extern int done;
 
 // prozesu array-a
 extern struct process_control_block *sch_arr;
+extern int sch_arr_tam;
 extern int tam_arr[MAX_CORE_KOP];
 extern int minimum;
 extern struct process_control_block atera;

@@ -97,11 +97,10 @@ struct node* delete(struct node *root, struct process_control_block x)
 
 void inorder(struct node *root)
 {
-    char a[20];
     if(root!=NULL) // checking if the root is not null
     {
         inorder(root->left_child); // visiting left child
-        printf(" %d ", root->data.pid); // printing data at root
+        printf(" (%d, %d) ", root->data.pid, root->data.vruntime); // printing data at root
         inorder(root->right_child);// visiting right child
     }else{
         printf("");

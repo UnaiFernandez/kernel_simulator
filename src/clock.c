@@ -28,7 +28,7 @@ void *clockfunc(void *hari_par){
             tick++;
 //            printf("[CLOCK] tick: %d\n", tick);
             sem_post(&semt);
-            //sem_post(&semp);
+            sem_post(&semp);
         }
     }
         printf("sem destroyed\n");
