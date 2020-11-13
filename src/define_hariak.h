@@ -11,6 +11,7 @@
 
 #define weight0 1024
 
+// Hariaren parametroak
 struct hari_param{
     int id;
     char * name;
@@ -20,12 +21,14 @@ struct hari_param{
     int core_kop;
 };
 
+// Main programan erabiltzen diren funtzioak
 void *scheduler_dispatcher(void *hari_param);
 void *process_generator(void *hari_param);
 void *timer(void *hari_param);
 void *clockfunc(void *hari_param);
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
 
+// Prozesu bakoitzaren parametroak
 struct process_control_block{
     int pid;
     int weight;
@@ -35,16 +38,9 @@ struct process_control_block{
 
 // tick en azken balioa irakurtzen dela bermatzeko
 extern volatile int tick;
-extern volatile int timtick;
-/*
-#define SEM 1
-#ifdef SEM
 
-
-
-
-#endif*/
-extern sem_t semt, semc, semp, sems, semc2, semc3;
+// semaforoak
+extern sem_t semt, semc, semp;
 
 // timer eta schedulerraren sinkronizaziorako
 extern pthread_mutex_t mutex;
@@ -52,14 +48,16 @@ extern pthread_cond_t cond;
 extern pthread_cond_t cond2;
 extern int done;
 
-// prozesu array-a
+// prozesu array-a eta bere tamaina
 extern struct process_control_block *sch_arr;
 extern int sch_arr_tam;
-extern int tam_arr[MAX_CORE_KOP];
-extern int minimum;
-extern struct process_control_block atera;
-//core struct
 
+//Core en prozesu kopurua gordetzeko array-a
+extern int tam_arr[MAX_CORE_KOP];
+//Prozesu gitxien dituen corearen identifikadorea 
+extern int minimum;
+
+//core struct
 struct core_t{
     struct node *root; 
     int core_num;
@@ -68,6 +66,7 @@ struct core_t{
     struct process_control_block hari2[1];
 };
 
+//Weinght-en array-a
 static const int weight[40] = {
 /* -20 */ 88761, 71755, 56483, 46273, 36291,
 /* -15 */ 29154, 23254, 18705, 14949, 11916,

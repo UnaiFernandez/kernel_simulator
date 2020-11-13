@@ -14,7 +14,7 @@ struct process_control_block *sch_arr;
 int sch_arr_tam = 0;
 int *arr;
 
-sem_t semt, semc, sems, semp;
+sem_t semt, semc, semp;
 
 
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
@@ -23,7 +23,9 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     pthread_t *hariak;
     struct hari_param *h_p;
     struct process_control_block *pcb;
-    
+   
+
+    //Hasieraketak
     hariak = malloc((hari_kop + core_kop) * sizeof(pthread_t));
     h_p = malloc((hari_kop + core_kop) * sizeof(struct hari_param));
     sch_arr = malloc(proz_kop * sizeof(pcb));
@@ -35,6 +37,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     printf("Creating threads...\n");
     printf("----------------------------------------------------------------\n");
 
+    //Hari bakoitza sortu
     for(i = 0; i < hari_kop; i++){
         if(i == 0){
             h_p[i].name = "Process Generator";
@@ -108,7 +111,7 @@ int main(int argc, char *argv[]){
     float periodoa;
     char *p;
 
-    
+    //getopt erabilita parametroak eskuratu
     while ((c = getopt (argc, argv, "p:m:t:c:")) != -1){
         switch (c){
             case 'p':
@@ -147,14 +150,12 @@ int main(int argc, char *argv[]){
     printf("    Periodoa: %.0f ns]\n", periodoa);
     sem_init(&semt, 0, 0);
     sem_init(&semp, 0, 0);
-    sem_init(&sems, 0, 1);
     sem_init(&semc, 0, 0);
     sortu_hariak(HARIKOP, proz_kop, maizMHz, tim, core_kop);
     
     sem_destroy(&semp);
     sem_destroy(&semc);
     sem_destroy(&semt);
-    sem_destroy(&sems);
     for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
         waitpid(-1, NULL, 0);
 

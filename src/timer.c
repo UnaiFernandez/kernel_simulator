@@ -5,20 +5,26 @@
 
 #include "define_hariak.h"
 
-volatile int timtick = 0;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 pthread_cond_t cond2 = PTHREAD_COND_INITIALIZER;
 int done = 0;
 
+
+/*
+ * Timer funtzioa
+ */
 void *timer(void *hari_par){
 
     struct hari_param *param;
     int t;
+
+    //Hasieraketak
     param = (struct hari_param *)hari_par;
-    printf("[TIMER:                   id = %d    name = %s               ]\n", param->id, param->name);
-    //sleep(1);
     t = tick;
+
+    //Hasierako hariaren informazioa pantailaratu
+    printf("[TIMER:                   id = %d    name = %s               ]\n", param->id, param->name);
 
     while(1){
         sem_wait(&semt);
