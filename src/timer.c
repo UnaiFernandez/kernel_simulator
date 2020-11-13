@@ -28,8 +28,7 @@ void *timer(void *hari_par){
 
     while(1){
         sem_wait(&semt);
-//        printf("[TIMER] tick read!\n");
-//        printf("[timer] tick: %d\n", tick);
+//        DEBUG_WRITE("[timer] tick read!%d\n", tick);
         if(tick == t+param->timer){
             printf("\n");
             pthread_mutex_lock(&mutex);

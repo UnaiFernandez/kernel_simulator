@@ -28,11 +28,11 @@ void *clockfunc(void *hari_par){
     while(1){
         if(t < param->maiz){
             t++;
-            //printf("t: %d\n", t);
+            //DEBUG_WRITE("t: %d\n", t);
         }else{
             t = 0;
             tick++;
-//            printf("[CLOCK] tick: %d\n", tick);
+            //DEBUG_WRITE("[CLOCK] tick: %d\n", tick);
             sem_post(&semt);
             sem_post(&semp);
         }

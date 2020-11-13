@@ -80,3 +80,9 @@ static const int weight[40] = {
 
 #endif
 
+#ifdef DEBUG
+    #define DEBUG_WRITE(x, ...) printf(x, __VA_ARGS__)
+#else
+    #define DEBUG_WRITE(x, ...)
+#endif // DEBUG
+

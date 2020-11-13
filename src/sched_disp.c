@@ -103,7 +103,7 @@ void *scheduler_dispatcher(void *hari_par){
                 exec = find_minimum(root);
                 core.tamaina--;
             }
-            //printf("[SCHEDULER/DISPATCHER %d] tick read!\n", param->id);
+            DEBUG_WRITE("[SCHEDULER/DISPATCHER %d] tick read!\n", param->id);
             printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core_num, exec->data.pid, exec->data.vruntime);
             inorder(root);
             printf("\n");

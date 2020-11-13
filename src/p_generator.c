@@ -38,7 +38,7 @@ void *process_generator(void *hari_par){
         
         sem_wait(&semp);
 
-//      printf("[PROCESS GENERATOR] tick read! %d\n", tick);
+        DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
         if(i == p_kop){
             pcb.pid = 555;
@@ -49,7 +49,7 @@ void *process_generator(void *hari_par){
             pcb.weight = (rand() % (upper - lower + 1)) + lower;
             pcb.vruntime = (rand() % (maxrt - minrt + 1)) + minrt;
         }
-//      printf("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
+        DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
         
         //Prozesuak array-ean sartu
         sch_arr[i] = pcb;
