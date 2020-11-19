@@ -34,6 +34,7 @@ struct process_control_block{
     int weight;
     int vruntime;
     float decay_factor;
+    int egoera;
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko
@@ -52,6 +53,10 @@ extern int done;
 extern struct process_control_block *sch_arr;
 extern int sch_arr_tam;
 
+extern struct tree *bst;
+extern struct node *root;
+extern volatile int treetam;
+
 //Core en prozesu kopurua gordetzeko array-a
 extern int tam_arr[MAX_CORE_KOP];
 //Prozesu gitxien dituen corearen identifikadorea 
@@ -61,10 +66,11 @@ extern int minimum;
 struct core_t{
     struct node *root; 
     int core_num;
-    int tamaina;
+    int busy;
     struct process_control_block hari1[1];
     struct process_control_block hari2[1];
 };
+extern struct node *lefmost;
 
 //Weinght-en array-a
 static const int weight[40] = {
@@ -76,7 +82,7 @@ static const int weight[40] = {
 /* 5 */ 335, 272, 215, 172, 137,
 /* 10 */ 110, 87, 70, 56, 45,
 /* 15 */ 36, 29, 23, 18, 15};
-
+extern pthread_mutex_t lock;
 
 #endif
 

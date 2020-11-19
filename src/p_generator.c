@@ -9,8 +9,9 @@
 
 
 struct process_control_block atera;
-
-
+struct node *root;
+volatile int treetam = 0;
+struct node *lefmost;
 /*
  * Process generator funtzioa 
  */
@@ -27,7 +28,7 @@ void *process_generator(void *hari_par){
     i = 0;
     p = 0;
     tam = p_kop;
-    
+    lefmost = root;
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
@@ -40,20 +41,29 @@ void *process_generator(void *hari_par){
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
-        if(i == p_kop){
-            pcb.pid = 555;
-            pcb.weight = 555;
-            pcb.vruntime = 555;
-        }else{
-            pcb.pid = rand() % 100;
-            pcb.weight = (rand() % (upper - lower + 1)) + lower;
-            pcb.vruntime = (rand() % (maxrt - minrt + 1)) + minrt;
-        }
+        pcb.pid = rand() % 100;
+        pcb.weight = (rand() % (upper - lower + 1)) + lower;
+        pcb.vruntime = (rand() % (maxrt - minrt + 1)) + minrt;
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
         
+        //Prozesu bat zuhaitzean sartu.
+        if(pcb.pid != 83){
+        if(root != NULL){
+            insert(root, pcb);
+            treetam++;
+        }else{
+            root = new_node(pcb);
+            treetam++;
+        }
+        }
+        i++;
+        inorder(root);
+        printf("\n");
+ 
+        /*
         //Prozesuak array-ean sartu
         sch_arr[i] = pcb;
-        i++;
+        */
     }
     pthread_exit(NULL);
 }

@@ -58,7 +58,7 @@ struct node* delete(struct node *root, struct process_control_block x)
 {
     //searching for the item to be deleted
     if(root==NULL)
-        return NULL;
+        return root;
     if (x.vruntime>root->data.vruntime)
         root->right_child = delete(root->right_child, x);
     else if(x.vruntime<root->data.vruntime)
