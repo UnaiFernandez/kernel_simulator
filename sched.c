@@ -88,7 +88,7 @@ void *scheduler_dispatcher(void *hari_par){
                 vrunt = vrunt - param->timer;
                 execdata.vruntime = vrunt;
                 if(vrunt > 0){
-                    printf("[ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
+                    DEBUG_WRITE("[ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
                     if(root != NULL){
                         insert(root, execdata);
                         treetam++;
@@ -96,7 +96,11 @@ void *scheduler_dispatcher(void *hari_par){
                         root = new_node(execdata);
                         treetam++;
                     }                    
-                    inorder(root);
+                }
+
+                if(treetam == 0){
+                    root = new_node(nulua);
+                    treetam++;
                 }
             }
         }
