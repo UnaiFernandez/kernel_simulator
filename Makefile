@@ -10,7 +10,7 @@ all:
 exec1:
 		./binaries/seso -p2 -m10 -t40 -c1
 exec4:
-		./binaries/seso -p4 -m10 -t 40 -c4
+		./binaries/seso -p4 -m100 -t4 -c1
 
 clean:
 		rm -rf binaries/seso

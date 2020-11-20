@@ -33,7 +33,8 @@ void *process_generator(void *hari_par){
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
     //Funtzioko loop-a
-    while(i <= p_kop){
+    //while(i <= p_kop){
+    while(1){
         //Ausazko zenbakiak sortzeko
         srand(tick*time(NULL));
         
@@ -57,8 +58,8 @@ void *process_generator(void *hari_par){
         }
         }
         i++;
-        inorder(root);
-        printf("\n");
+        //inorder(root);
+        //printf("\n");
  
         /*
         //Prozesuak array-ean sartu

@@ -16,7 +16,6 @@ int tam_arr[MAX_CORE_KOP];
 
 int getMincore(int *arr, int kop){
     int i, id, min = 10000000;
-
     for(i = 0; i < kop; i++){
         if(arr[i] <= min){
             min = arr[i];
@@ -45,8 +44,8 @@ void *scheduler_dispatcher(void *hari_par){
 
     struct hari_param *param;
     param = (struct hari_param *)hari_par;
-    int core_num, i1 = 1, weightval, vrunt, i, sch_tam, min, busy;
-    struct process_control_block nulua;
+    int core_num, i1 = 1, weightval, vrunt, i, sch_tam, min;
+    struct process_control_block nulua, execdata;
     struct core_t core;
     struct node *lag, *exec;
 
@@ -57,7 +56,6 @@ void *scheduler_dispatcher(void *hari_par){
 
     //Hasieraketak
     core_num = param->id - 3;
-    busy = 0;
 
     nulua.pid = -1;
     nulua.weight = -1;
@@ -65,6 +63,7 @@ void *scheduler_dispatcher(void *hari_par){
 
     core.core_num = core_num;
     core.root = root;
+    core.busy = 0;
     sch_tam = sch_arr_tam;
     initArray(tam_arr);
 
@@ -75,33 +74,34 @@ void *scheduler_dispatcher(void *hari_par){
         if(i1 == 1){
             i1 = 0;
         }else{
-            //pthread_mutex_lock(&lock);
-            if(busy == 0 && root->data.pid != -1){
+            if(treetam >= 1){
                 exec = find_minimum(root);
-                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core_num, exec.pid, exec.vruntime);
+                execdata = exec->data;
                 root = delete(root, exec->data);
                 treetam--;
-                busy = 1;
-            }else if(root->data.pid == -1){
-                exec = root;
-                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core_num, exec.pid, exec.vruntime);
-            }else{
-                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core_num, exec.pid, exec.vruntime);
-            }
-            vrunt = exec.vruntime;
-            vrunt = vrunt - param->timer;
-            exec.vruntime = vrunt;
+               // printf("--->");
+               // inorder(root);
+               // printf("\n");
+                printf("---------core---------    thread 1: [ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
+                vrunt =execdata.vruntime;
+                vrunt = vrunt + param->timer;
+                execdata.vruntime = vrunt;
+                if(vrunt > 0){
+                    DEBUG_WRITE("[ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
+                    if(root != NULL){
+                        insert(root, execdata);
+                        treetam++;
+                    }else{
+                        root = new_node(execdata);
+                        treetam++;
+                    }                    
+                }
 
-            if(exec.vruntime <= 0){
-                busy = 0;
+                if(treetam == 0){
+                    root = new_node(nulua);
+                    treetam++;
+                }
             }
-            if(treetam == 0){
-                root = new_node(nulua);
-                treetam++;
-            }
-            inorder(root);
-            printf("\n");
-            //pthread_mutex_unlock(&lock);
         }
         pthread_cond_signal(&cond);
         pthread_cond_wait(&cond2, &mutex);

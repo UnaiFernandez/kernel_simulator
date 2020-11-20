@@ -16,7 +16,6 @@ int tam_arr[MAX_CORE_KOP];
 
 int getMincore(int *arr, int kop){
     int i, id, min = 10000000;
-
     for(i = 0; i < kop; i++){
         if(arr[i] <= min){
             min = arr[i];
@@ -85,7 +84,7 @@ void *scheduler_dispatcher(void *hari_par){
                 printf("\n");
                 printf("---------core---------    thread 1: [ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
                 vrunt =execdata.vruntime;
-                vrunt = vrunt - param->timer;
+                vrunt = vrunt + param->timer;
                 execdata.vruntime = vrunt;
                 if(vrunt > 0){
                     DEBUG_WRITE("[ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
