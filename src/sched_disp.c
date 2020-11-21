@@ -7,18 +7,16 @@
 #include "tree.h"
 
 
-struct tree *bst;
 /*
  * Core guztietan prozesu gutxien dituenaren identifikadorea lortzeko.
  */
 int minimum = 0;
-int tam_arr[MAX_CORE_KOP];
+int busy_arr[MAX_CORE_KOP];
 
-int getMincore(int *arr, int kop){
-    int i, id, min = 10000000;
+int getCore(int *arr, int kop){
+    int id, i;
     for(i = 0; i < kop; i++){
-        if(arr[i] <= min){
-            min = arr[i];
+        if(arr[i] <= 0){
             id=i;
         }
     }
@@ -44,7 +42,7 @@ void *scheduler_dispatcher(void *hari_par){
 
     struct hari_param *param;
     param = (struct hari_param *)hari_par;
-    int core_num, i1 = 1, weightval, vrunt, i, sch_tam, min;
+    int core_num, i1 = 1, vrunt, i, sch_tam, nextCore;
     struct process_control_block nulua, execdata;
     struct core_t core;
     struct node *lag, *exec;
@@ -65,7 +63,7 @@ void *scheduler_dispatcher(void *hari_par){
     core.root = root;
     core.busy = 0;
     sch_tam = sch_arr_tam;
-    initArray(tam_arr);
+    initArray(busy_arr);
 
     //Funtzioko loop-ean sartu, mutex baldintzatua erabiliz.
     pthread_mutex_lock(&mutex);
@@ -74,11 +72,15 @@ void *scheduler_dispatcher(void *hari_par){
         if(i1 == 1){
             i1 = 0;
         }else{
+            nextCore = getCore(busy_arr, param->core_kop);
+            printf("nextcore = %d\n", nextCore);
             if(treetam >= 1){
+                core.busy = 1;
                 exec = find_minimum(root);
                 execdata = exec->data;
                 root = delete(root, exec->data);
                 treetam--;
+                busy_arr[core.core_num] = 1;
                // printf("--->");
                // inorder(root);
                // printf("\n");

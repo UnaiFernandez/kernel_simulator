@@ -59,7 +59,7 @@ extern struct node *root;
 extern volatile int treetam;
 
 //Core en prozesu kopurua gordetzeko array-a
-extern int tam_arr[MAX_CORE_KOP];
+extern int busy_arr[MAX_CORE_KOP];
 //Prozesu gitxien dituen corearen identifikadorea 
 extern int minimum;
 
