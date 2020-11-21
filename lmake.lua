@@ -24,6 +24,12 @@ function exec()
     build()
     lmake_exec("binaries/seso -p2 -m10 -t40 -c1")
 end
+
+function exec4()
+    build()
+    lmake_exec("binaries/seso -p4 -m10 -t40 -c1")
+end
+
 function clean()
     lmake_exec("rm binaries/main.c.o binaries/sched_disp.c.o binaries/timer.c.o binaries/clock.c.o binaries/p_generator.c.o binaries/tree.c.o") 
 end    

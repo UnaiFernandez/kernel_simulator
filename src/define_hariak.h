@@ -31,6 +31,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
 // Prozesu bakoitzaren parametroak
 struct process_control_block{
     int pid;
+    int nice;
     int weight;
     int vruntime;
     float decay_factor;

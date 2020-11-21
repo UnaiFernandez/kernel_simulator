@@ -84,7 +84,7 @@ void *scheduler_dispatcher(void *hari_par){
                // printf("\n");
                 printf("---------core---------    thread 1: [ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
                 vrunt =execdata.vruntime;
-                vrunt = vrunt + param->timer;
+                vrunt = vrunt + (param->timer * execdata.decay_factor);
                 execdata.vruntime = vrunt;
                 if(vrunt > 0){
                     DEBUG_WRITE("[ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
