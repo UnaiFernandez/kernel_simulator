@@ -45,7 +45,7 @@ void *scheduler_dispatcher(void *hari_par){
     int core_num, i1 = 1, vrunt, i, sch_tam, nextCore;
     struct process_control_block nulua, execdata;
     struct core_t core;
-    struct node *lag, *exec;
+    struct node *lag, *exec, *execold;
 
     //Hasieran sortutako schedulerraren informazioa
     printf("[SCHEDULER/DISPATCHER:    id = %d    name = %s]\n", param->id, param->name);
@@ -73,18 +73,19 @@ void *scheduler_dispatcher(void *hari_par){
             i1 = 0;
         }else{
             nextCore = getCore(busy_arr, param->core_kop);
-            printf("nextcore = %d\n", nextCore);
-            if(treetam >= 1){
+            //printf("nextcore = %d\n", nextCore);
+            if(treetam >= 1 && core.core_num == nextCore){
                 core.busy = 1;
-                exec = find_minimum(root);
-                execdata = exec->data;
-                root = delete(root, exec->data);
+                core.exec = find_minimum(root);
+                lag = core.exec;
+                execdata = core.exec->data;
+                root = delete(root, core.exec->data);
                 treetam--;
                 busy_arr[core.core_num] = 1;
                // printf("--->");
                // inorder(root);
                // printf("\n");
-                printf("---------core---------    thread 1: [ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
+                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core.core_num, execdata.pid, execdata.vruntime);
                 vrunt =execdata.vruntime;
                 vrunt = vrunt + (param->timer * execdata.decay_factor);
                 execdata.vruntime = vrunt;
@@ -103,6 +104,11 @@ void *scheduler_dispatcher(void *hari_par){
                     root = new_node(nulua);
                     treetam++;
                 }
+            }else{
+                if(core.exec != NULL)
+                    printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core.core_num, core.exec->data.pid, core.exec->data.vruntime);
+                else
+                    printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core.core_num, nulua.pid, nulua.vruntime);
             }
         }
         pthread_cond_signal(&cond);

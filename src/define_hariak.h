@@ -66,10 +66,11 @@ extern int minimum;
 //core struct
 struct core_t{
     struct node *root; 
+    struct node *exec; 
     int core_num;
     int busy;
-    struct process_control_block hari1[1];
-    struct process_control_block hari2[1];
+    struct process_control_block hari1;
+    struct process_control_block hari2;
 };
 extern struct node *lefmost;
 
