@@ -36,6 +36,7 @@ struct process_control_block{
     int vruntime;
     float decay_factor;
     int egoera;
+    int rtime;
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko

@@ -18,7 +18,7 @@ struct node *lefmost;
 void *process_generator(void *hari_par){
 
     int k, j, i, p_kop, p, tam;
-    int lower = 0, upper = 40, minrt = 10, maxrt = 60;
+    int lower = 0, upper = 40, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb;
     
@@ -46,6 +46,7 @@ void *process_generator(void *hari_par){
         pcb.nice =  (rand() % (upper - lower + 1)) + lower;
         pcb.weight = weight[pcb.nice];     
         pcb.vruntime = (rand() % (maxrt - minrt + 1)) + minrt;
+        pcb.rtime = (rand() % (maxrt - minrt + 1)) + minrt;
         pcb.decay_factor = (float)weight0/pcb.weight; 
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
         

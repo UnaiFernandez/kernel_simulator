@@ -74,41 +74,43 @@ void *scheduler_dispatcher(void *hari_par){
         }else{
             nextCore = getCore(busy_arr, param->core_kop);
             //printf("nextcore = %d\n", nextCore);
-            if(treetam >= 1 && core.core_num == nextCore){
-                core.busy = 1;
-                core.exec = find_minimum(root);
-                lag = core.exec;
+            if(treetam >= 1 /*&& core.core_num == nextCore*/){
+                if(core.busy != 1){
+                    core.busy = 1;
+                    core.exec = find_minimum(root);
+                    busy_arr[core.core_num] = 1;
+                }
+                //lag = core.exec;
                 execdata = core.exec->data;
                 root = delete(root, core.exec->data);
                 treetam--;
-                busy_arr[core.core_num] = 1;
-               // printf("--->");
-               // inorder(root);
-               // printf("\n");
                 printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core.core_num, execdata.pid, execdata.vruntime);
+                
                 vrunt =execdata.vruntime;
                 vrunt = vrunt + (param->timer * execdata.decay_factor);
                 execdata.vruntime = vrunt;
-                if(vrunt > 0){
-                    DEBUG_WRITE("[ id: %d vruntime: %d ]\n", execdata.pid, execdata.vruntime);
-                    if(root != NULL){
-                        insert(root, execdata);
-                        treetam++;
-                    }else{
+                execdata.rtime -= param->timer;
+                execdata.egoera = 1;
+                inorder(root);
+
+                if(execdata.rtime > 0){
+                    if(root == NULL){
                         root = new_node(execdata);
                         treetam++;
-                    }                    
+                    }else{
+                        insert(root, execdata);
+                        treetam++;
+                    }
+                    core.busy = 0;
+                }else{
+                    core.busy = 0;
                 }
-
+                
+                //Prozesuak amaitzen direnean, prozesu nulua sartzen du core barruan
                 if(treetam == 0){
                     root = new_node(nulua);
                     treetam++;
                 }
-            }else{
-                if(core.exec != NULL)
-                    printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core.core_num, core.exec->data.pid, core.exec->data.vruntime);
-                else
-                    printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core.core_num, nulua.pid, nulua.vruntime);
             }
         }
         pthread_cond_signal(&cond);
