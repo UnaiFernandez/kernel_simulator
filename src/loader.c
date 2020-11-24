@@ -50,33 +50,24 @@ void *process_generator(void *hari_par){
         pcb.decay_factor = (float)weight0/pcb.weight; 
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
         
-        //Prozesu bat zuhaitzean sartu.
+        //Prozesu bat dagokion zuhaitzean sartu.
         if(pcb.pid != 83){
             if(cpu.core[i].root != NULL){
                 insert(cpu.core[i].root, pcb);
                 cpu.core[i].treetam++;
             }else{
-            printf("prozasua sartu\n");
                 cpu.core[i].root = new_node(pcb);
                 cpu.core[i].treetam++;
             }
         }
         i = (i + 1) % param->core_kop;
         j++;
-        //inorder(root);
-        //printf("\n");
- 
-        /*
-        //Prozesuak array-ean sartu
-        sch_arr[i] = pcb;
-        */
-        
     }
-    for(int k = 0; k < param->core_kop; k++){
+    /*for(int k = 0; k < param->core_kop; k++){
         printf("core%d:", k);
         inorder(cpu.core[k].root);
         printf("\n");
-    }
+    }*/
     
     pthread_exit(NULL);
 }

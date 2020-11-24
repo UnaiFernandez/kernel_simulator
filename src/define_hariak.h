@@ -27,6 +27,10 @@ void *process_generator(void *hari_param);
 void *timer(void *hari_param);
 void *clockfunc(void *hari_param);
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
+//memory management
+struct mm{
+    int data;
+};
 
 // Prozesu bakoitzaren parametroak
 struct process_control_block{
@@ -37,6 +41,7 @@ struct process_control_block{
     float decay_factor;
     int egoera;
     int rtime;
+    struct mm mm;
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko
