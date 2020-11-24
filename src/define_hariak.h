@@ -70,9 +70,17 @@ struct core_t{
     struct node *exec; 
     int core_num;
     int busy;
+    int treetam;
     struct process_control_block hari1;
     struct process_control_block hari2;
 };
+
+
+struct cpu{
+    struct core_t * core;
+};
+
+extern struct cpu cpu;
 extern struct node *lefmost;
 
 //Weinght-en array-a

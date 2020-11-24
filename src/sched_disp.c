@@ -13,10 +13,10 @@
 int minimum = 0;
 int busy_arr[MAX_CORE_KOP];
 
-int getCore(int *arr, int kop){
+int getCore(struct core_t *arr, int kop, int num){
     int id, i;
     for(i = 0; i < kop; i++){
-        if(arr[i] <= 0){
+        if(i == num){
             id=i;
         }
     }
@@ -44,7 +44,7 @@ void *scheduler_dispatcher(void *hari_par){
     param = (struct hari_param *)hari_par;
     int core_num, i1 = 1, vrunt, i, sch_tam, nextCore;
     struct process_control_block nulua, execdata;
-    struct core_t core;
+    //struct core_t core;
     struct node *lag, *exec, *execold;
 
     //Hasieran sortutako schedulerraren informazioa
@@ -55,13 +55,14 @@ void *scheduler_dispatcher(void *hari_par){
     //Hasieraketak
     core_num = param->id - 3;
 
+    i = getCore(cpu.core, param->core_kop, core_num);
     nulua.pid = -1;
     nulua.weight = -1;
     nulua.vruntime = -1;
 
-    core.core_num = core_num;
-    core.root = root;
-    core.busy = 0;
+    cpu.core[i].core_num = core_num;
+    cpu.core[i].root = root;
+    cpu.core[i].busy = 0;
     sch_tam = sch_arr_tam;
     initArray(busy_arr);
 
@@ -72,45 +73,48 @@ void *scheduler_dispatcher(void *hari_par){
         if(i1 == 1){
             i1 = 0;
         }else{
-            nextCore = getCore(busy_arr, param->core_kop);
             //printf("nextcore = %d\n", nextCore);
-            if(treetam >= 1 /*&& core.core_num == nextCore*/){
-                if(core.busy != 1){
-                    core.busy = 1;
-                    core.exec = find_minimum(root);
-                    busy_arr[core.core_num] = 1;
+            if(cpu.core[i].treetam >= 1 /*&& core.core_num == nextCore*/){
+                if(cpu.core[i].busy != 1){
+                    cpu.core[i].busy = 1;
+                    cpu.core[i].exec = find_minimum(cpu.core[i].root);
+                    busy_arr[cpu.core[i].core_num] = 1;
                 }
                 //lag = core.exec;
-                execdata = core.exec->data;
-                root = delete(root, core.exec->data);
-                treetam--;
-                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", core.core_num, execdata.pid, execdata.vruntime);
+                execdata = cpu.core[i].exec->data;
+                cpu.core[i].root = delete(cpu.core[i].root, cpu.core[i].exec->data);
+                cpu.core[i].treetam--;
+                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
                 
                 vrunt =execdata.vruntime;
                 vrunt = vrunt + (param->timer * execdata.decay_factor);
                 execdata.vruntime = vrunt;
                 execdata.rtime -= param->timer;
                 execdata.egoera = 1;
-                inorder(root);
+                //inorder(cpu.core[i].root);
 
                 if(execdata.rtime > 0){
-                    if(root == NULL){
-                        root = new_node(execdata);
-                        treetam++;
+                    if(cpu.core[i].root == NULL){
+                        cpu.core[i].root = new_node(execdata);
+                        cpu.core[i].treetam++;
                     }else{
-                        insert(root, execdata);
-                        treetam++;
+                        insert(cpu.core[i].root, execdata);
+                        cpu.core[i].treetam++;
                     }
-                    core.busy = 0;
+                    cpu.core[i].busy = 0;
                 }else{
-                    core.busy = 0;
+                    cpu.core[i].busy = 0;
                 }
                 
                 //Prozesuak amaitzen direnean, prozesu nulua sartzen du core barruan
-                if(treetam == 0){
-                    root = new_node(nulua);
+                if(cpu.core[i].root == NULL){
+                    cpu.core[i].root = new_node(nulua);
                     treetam++;
                 }
+            }else{
+                cpu.core[i].root = new_node(nulua);
+                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, nulua.pid, nulua.vruntime);
+                treetam++;
             }
         }
         pthread_cond_signal(&cond);

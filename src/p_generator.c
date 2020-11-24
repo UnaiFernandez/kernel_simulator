@@ -33,7 +33,7 @@ void *process_generator(void *hari_par){
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
     //Funtzioko loop-a
-    while(i <= p_kop){
+    while(j <= p_kop){
     //while(1){
         //Ausazko zenbakiak sortzeko
         srand(tick*time(NULL));
@@ -52,15 +52,17 @@ void *process_generator(void *hari_par){
         
         //Prozesu bat zuhaitzean sartu.
         if(pcb.pid != 83){
-        if(root != NULL){
-            insert(root, pcb);
-            treetam++;
-        }else{
-            root = new_node(pcb);
-            treetam++;
+            if(cpu.core[i].root != NULL){
+                insert(cpu.core[i].root, pcb);
+                cpu.core[i].treetam++;
+            }else{
+            printf("prozasua sartu\n");
+                cpu.core[i].root = new_node(pcb);
+                cpu.core[i].treetam++;
+            }
         }
-        }
-        i++;
+        i = (i + 1) % param->core_kop;
+        j++;
         //inorder(root);
         //printf("\n");
  
@@ -68,7 +70,14 @@ void *process_generator(void *hari_par){
         //Prozesuak array-ean sartu
         sch_arr[i] = pcb;
         */
+        
     }
+    for(int k = 0; k < param->core_kop; k++){
+        printf("core%d:", k);
+        inorder(cpu.core[k].root);
+        printf("\n");
+    }
+    
     pthread_exit(NULL);
 }
 
