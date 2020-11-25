@@ -23,7 +23,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     pthread_t *hariak;
     struct hari_param *h_p;
     struct process_control_block *pcb;
-   
+
 
     //Hasieraketak
     cpu.core = malloc(core_kop * sizeof(struct core_t));
@@ -75,7 +75,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
                 exit(1);
             }
         }
-        
+
     }
     c_kop = core_kop + 3;
     for(j = 3; j < c_kop; j++){
@@ -99,7 +99,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     printf("Clock, timer and process signals:\n");
     printf("----------------------------------------------------------------\n");
     hari_kop = hari_kop + core_kop;
-    for(i = 0;i < hari_kop-1;i++) // Ume guztiak amaitu arte 
+    for(i = 0;i < hari_kop-1;i++) // Ume guztiak amaitu arte
         pthread_join(hariak[i], NULL);
 
     free(hariak);
@@ -148,16 +148,18 @@ int main(int argc, char *argv[]){
     printf("Parametroak:\n");
     printf("----------------------------------------------------------------\n");
     printf("[Maiztasuna: %d MHz", maiz);
-    printf("    Periodoa: %.0f ns]\n", periodoa);
+    printf("    Periodoa: %.0f ns", periodoa);
+    printf("    Prozesu kopurua: %d", proz_kop);
+    printf("    Core kopurua: %d]\n", core_kop);
     sem_init(&semt, 0, 0);
     sem_init(&semp, 0, 0);
     sem_init(&semc, 0, 0);
     sortu_hariak(HARIKOP, proz_kop, maizMHz, tim, core_kop);
-    
+
     sem_destroy(&semp);
     sem_destroy(&semc);
     sem_destroy(&semt);
-    for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte 
+    for(i = 0;i < proz_kop;i++) // Ume guztiak amaitu arte
         waitpid(-1, NULL, 0);
 
     free((void *)sch_arr);
