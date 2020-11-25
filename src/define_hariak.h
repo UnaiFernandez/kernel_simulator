@@ -2,14 +2,14 @@
 #ifndef _define_hariak_h
 #define _define_hariak_h
 
-#define HARIKOP 4
-#define MAX_CORE_KOP 32
-
 #include <semaphore.h>
 #include <pthread.h>
-#define TAM 10
 
+#define HARIKOP 4
+#define MAX_CORE_KOP 32
+#define TAM 10
 #define weight0 1024
+#define ADDRTAM 2
 
 // Hariaren parametroak
 struct hari_param{
@@ -57,22 +57,22 @@ extern pthread_cond_t cond2;
 extern int done;
 
 // prozesu array-a eta bere tamaina
-extern struct process_control_block *sch_arr;
-extern int sch_arr_tam;
+//extern struct process_control_block *sch_arr;
+//extern int sch_arr_tam;
 
-extern struct tree *bst;
-extern struct node *root;
-extern volatile int treetam;
+//extern struct tree *bst;
+//extern struct node *root;
+//extern volatile int treetam;
 
 //Core en prozesu kopurua gordetzeko array-a
 extern int busy_arr[MAX_CORE_KOP];
-//Prozesu gitxien dituen corearen identifikadorea 
-extern int minimum;
+//Prozesu gitxien dituen corearen identifikadorea
+//extern int minimum;
 
 //core struct
 struct core_t{
-    struct node *root; 
-    struct node *exec; 
+    struct node *root;
+    struct node *exec;
     int core_num;
     int busy;
     int treetam;
@@ -86,7 +86,7 @@ struct cpu{
 };
 
 extern struct cpu cpu;
-extern struct node *lefmost;
+//extern struct node *lefmost;
 
 //Weinght-en array-a
 static const int weight[40] = {
@@ -107,4 +107,3 @@ extern pthread_mutex_t lock;
 #else
     #define DEBUG_WRITE(x, ...)
 #endif // DEBUG
-

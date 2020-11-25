@@ -36,6 +36,14 @@ void initArray(int *arr){
 pthread_mutex_t lock;
 
 /*
+* MMU-aren funtzioa
+*/
+void mmu_function(){
+
+}
+
+
+/*
  * Schedulerraren funtzioa.
  */
 void *scheduler_dispatcher(void *hari_par){
@@ -50,7 +58,7 @@ void *scheduler_dispatcher(void *hari_par){
     //Hasieran sortutako schedulerraren informazioa
     printf("[SCHEDULER/DISPATCHER:    id = %d    name = %s]\n", param->id, param->name);
     sleep(1);
-   
+
 
     //Hasieraketak
     core_num = param->id - 3;
@@ -61,9 +69,9 @@ void *scheduler_dispatcher(void *hari_par){
     nulua.vruntime = -1;
 
     cpu.core[i].core_num = core_num;
-    cpu.core[i].root = root;
+    //cpu.core[i].root = root;
     cpu.core[i].busy = 0;
-    sch_tam = sch_arr_tam;
+    //sch_tam = sch_arr_tam;
     initArray(busy_arr);
 
     //Funtzioko loop-ean sartu, mutex baldintzatua erabiliz.
@@ -85,7 +93,7 @@ void *scheduler_dispatcher(void *hari_par){
                 cpu.core[i].root = delete(cpu.core[i].root, cpu.core[i].exec->data);
                 cpu.core[i].treetam--;
                 printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
-                
+
                 vrunt =execdata.vruntime;
                 vrunt = vrunt + (param->timer * execdata.decay_factor);
                 execdata.vruntime = vrunt;
@@ -105,16 +113,16 @@ void *scheduler_dispatcher(void *hari_par){
                 }else{
                     cpu.core[i].busy = 0;
                 }
-                
+
                 //Prozesuak amaitzen direnean, prozesu nulua sartzen du core barruan
                 if(cpu.core[i].root == NULL){
                     cpu.core[i].root = new_node(nulua);
-                    treetam++;
+                    //treetam++;
                 }
             }else{
                 cpu.core[i].root = new_node(nulua);
                 printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, nulua.pid, nulua.vruntime);
-                treetam++;
+                //treetam++;
             }
         }
         pthread_cond_signal(&cond);

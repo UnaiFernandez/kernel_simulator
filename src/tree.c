@@ -3,6 +3,9 @@
 
 #include "tree.h"
 
+/*
+* Nodo bat bilatzeko funtzioa
+*/
 struct node* search(struct node *root, struct process_control_block x)
 {
 if(root==NULL || root->data.vruntime==x.vruntime) //if root->data is x then the element is found
@@ -13,7 +16,9 @@ if(root==NULL || root->data.vruntime==x.vruntime) //if root->data is x then the 
         return search(root->left_child,x);
 }
 
-//function to find the minimum value in a node
+/*
+* Zuhatzean ezkerraldean dagoen nodoa bueltatzen du (txikiena).
+*/
 struct node* find_minimum(struct node *root)
 {
     if(root == NULL)
@@ -23,13 +28,18 @@ struct node* find_minimum(struct node *root)
     return root;
 }
 
+/*
+* Minimoa lortzeko funtzioa
+*/
 struct process_control_block get_min(struct node *root){
     struct node *min;
     min = find_minimum(root);
     return min->data;
 }
 
-//function to create a node
+/*
+* Nodo bat sortzeko funtzioa
+*/
 struct node* new_node(struct process_control_block x)
 {
     struct node *p;
@@ -41,6 +51,9 @@ struct node* new_node(struct process_control_block x)
     return p;
 }
 
+/*
+* Nodo bat zuhaitzean sartzeko funtzioa
+*/
 struct node* insert(struct node *root, struct process_control_block x)
 {
     //searching for the place to insert
@@ -53,7 +66,9 @@ struct node* insert(struct node *root, struct process_control_block x)
     return root;
 }
 
-// funnction to delete a node
+/*
+* Nodo bat zuhaitzetik ezabatzeko
+*/
 struct node* delete(struct node *root, struct process_control_block x)
 {
     //searching for the item to be deleted
@@ -95,6 +110,9 @@ struct node* delete(struct node *root, struct process_control_block x)
     return root;
 }
 
+/*
+* Nodoak inordenean pantailaratzeko
+*/
 void inorder(struct node *root)
 {
     if(root!=NULL) // checking if the root is not null
@@ -106,20 +124,3 @@ void inorder(struct node *root)
         printf("");
     }
 }
-
-/*int main()
-{
-    struct process_control_block pcb;
-    struct process_control_block manolito;
-    pcb.pid = 1;
-    pcb.vruntime = 15;
-    manolito.pid = 23;
-    manolito.vruntime = 2;
-    struct node *root;
-    root = new_node(pcb);
-    insert(root, manolito);
-
-    inorder(root);
-    printf("\n");
-    return 0;
-}*/
