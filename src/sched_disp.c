@@ -12,6 +12,8 @@
  */
 int minimum = 0;
 int busy_arr[MAX_CORE_KOP];
+int ir;
+int pc;
 
 int getCore(struct core_t *arr, int kop, int num){
     int id, i;
@@ -41,7 +43,6 @@ pthread_mutex_t lock;
 void mmu_function(){
 
 }
-
 
 /*
  * Schedulerraren funtzioa.

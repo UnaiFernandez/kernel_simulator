@@ -23,13 +23,15 @@ struct hari_param{
 
 // Main programan erabiltzen diren funtzioak
 void *scheduler_dispatcher(void *hari_param);
-void *process_generator(void *hari_param);
+void *loader(void *hari_param);
 void *timer(void *hari_param);
 void *clockfunc(void *hari_param);
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
 //memory management
 struct mm{
-    int data;
+    char *text;
+    char **data;
+    int pgb;
 };
 
 // Prozesu bakoitzaren parametroak
@@ -99,6 +101,19 @@ static const int weight[40] = {
 /* 10 */ 110, 87, 70, 56, 45,
 /* 15 */ 36, 29, 23, 18, 15};
 extern pthread_mutex_t lock;
+
+
+//helbide logikoak
+struct l_addr{
+    int orr_zenb;
+    int desp;
+};
+
+//helbide fisikoa
+struct f_addr{
+    int frame;
+    int desp;
+};
 
 #endif
 

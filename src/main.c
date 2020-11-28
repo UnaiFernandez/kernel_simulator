@@ -45,7 +45,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
             h_p[i].id = i;
             h_p[i].p_kop = proz_kop;
             h_p[i].core_kop = core_kop;
-            err = pthread_create(&hariak[i], NULL, process_generator, (void *)&h_p[i]);;
+            err = pthread_create(&hariak[i], NULL, loader, (void *)&h_p[i]);;
 
             if(err > 0){
                 fprintf(stderr, "Errore bat gertatu da hariak sortzean.\n");

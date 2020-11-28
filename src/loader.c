@@ -13,15 +13,15 @@ struct node *root;
 volatile int treetam = 0;
 struct node *lefmost;
 /*
- * Process generator funtzioa 
+ * Process generator funtzioa
  */
-void *process_generator(void *hari_par){
+void *loader(void *hari_par){
 
     int k, j, i, p_kop, p, tam;
     int lower = 0, upper = 40, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb;
-    
+
     //Hasieraketak
     param = (struct hari_param *)hari_par;
     p_kop = param->p_kop;
@@ -37,19 +37,19 @@ void *process_generator(void *hari_par){
     //while(1){
         //Ausazko zenbakiak sortzeko
         srand(tick*time(NULL));
-        
+
         sem_wait(&semp);
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
         pcb.pid = rand() % 100;
         pcb.nice =  (rand() % (upper - lower + 1)) + lower;
-        pcb.weight = weight[pcb.nice];     
+        pcb.weight = weight[pcb.nice];
         pcb.vruntime = (rand() % (maxrt - minrt + 1)) + minrt;
         pcb.rtime = (rand() % (maxrt - minrt + 1)) + minrt;
-        pcb.decay_factor = (float)weight0/pcb.weight; 
+        pcb.decay_factor = (float)weight0/pcb.weight;
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
-        
+
         //Prozesu bat dagokion zuhaitzean sartu.
         if(pcb.pid != 83){
             if(cpu.core[i].root != NULL){
@@ -68,9 +68,6 @@ void *process_generator(void *hari_par){
         inorder(cpu.core[k].root);
         printf("\n");
     }*/
-    
+
     pthread_exit(NULL);
 }
-
-
-
