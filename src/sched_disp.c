@@ -14,6 +14,7 @@ int minimum = 0;
 int busy_arr[MAX_CORE_KOP];
 int ir;
 int pc;
+int ptbr;
 
 int getCore(struct core_t *arr, int kop, int num){
     int id, i;

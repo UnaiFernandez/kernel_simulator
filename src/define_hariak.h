@@ -43,6 +43,7 @@ struct process_control_block{
     float decay_factor;
     int egoera;
     int rtime;
+    int ptbr;
     struct mm mm;
 };
 
@@ -114,6 +115,15 @@ struct f_addr{
     int frame;
     int desp;
 };
+
+//memoria
+struct mem{
+  int helb;
+  struct frame frame;
+};
+
+//memoriako array
+struct mem *memarr; //malloc egin
 
 #endif
 
