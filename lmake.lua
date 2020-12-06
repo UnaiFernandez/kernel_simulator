@@ -30,9 +30,9 @@ function exec4()
     lmake_exec("binaries/seso -p10 -m10 -t40 -c4")
 end
 
-function exec10()
+function exec4fast()
     build()
-    lmake_exec("binaries/seso -p10 -m10 -t40 -c10")
+    lmake_exec("binaries/seso -p50 -m1 -t40 -c4")
 end
 
 function clean()

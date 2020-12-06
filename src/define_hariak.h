@@ -116,6 +116,11 @@ struct f_addr{
     int desp;
 };
 
+
+//errepasatu hau!!!!!!
+struct frame{
+    int a;
+};
 //memoria
 struct mem{
   int helb;
@@ -123,7 +128,7 @@ struct mem{
 };
 
 //memoriako array
-struct mem *memarr; //malloc egin
+extern struct mem *memarr; //malloc egin
 
 #endif
 
