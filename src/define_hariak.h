@@ -29,8 +29,8 @@ void *clockfunc(void *hari_param);
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
 //memory management
 struct mm{
-    char *text;
-    char **data;
+    int text;
+    int data;
     int pgb;
 };
 
@@ -105,27 +105,24 @@ extern pthread_mutex_t lock;
 
 
 //helbide logikoak
-struct l_addr{
-    int orr_zenb;
-    int desp;
-};
-
+//struct l_addr{
+//    int orr_zenb;
+//    int desp;
+//};
+extern int l_addr;
 //helbide fisikoa
-struct f_addr{
-    int frame;
-    int desp;
-};
+//struct f_addr{
+//    int frame;
+//    int desp;
+//};
+extern int f_addr;
 
-
-//errepasatu hau!!!!!!
-struct frame{
-    int a;
-};
 //memoria
-struct mem{
-  int helb;
-  struct frame frame;
-};
+//struct mem{
+//  int helb;
+//  struct frame frame;
+//};
+extern int *mem;
 
 //memoriako array
 extern struct mem *memarr; //malloc egin
