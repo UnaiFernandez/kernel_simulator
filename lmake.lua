@@ -22,7 +22,7 @@ end
 
 function exec()
     build()
-    lmake_exec("binaries/seso -p2 -m10 -t40 -c1")
+    lmake_exec("binaries/seso -p1 -m10 -t40 -c1")
 end
 
 function exec4()

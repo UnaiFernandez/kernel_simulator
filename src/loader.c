@@ -17,10 +17,12 @@ struct node *lefmost;
  */
 void *loader(void *hari_par){
 
-    int k, j, i, p_kop, p, tam;
+    int j, i, p_kop, p, tam, lnum;
     int lower = 0, upper = 40, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb;
+    FILE *fp;
+    char line[16];
 
     //Hasieraketak
     param = (struct hari_param *)hari_par;
@@ -29,11 +31,12 @@ void *loader(void *hari_par){
     p = 0;
     tam = p_kop;
     lefmost = root;
+    lnum = 0;
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
     //Funtzioko loop-a
-    while(j <= p_kop){
+    while(j < p_kop){
     //while(1){
         //Ausazko zenbakiak sortzeko
         srand(tick*time(NULL));
@@ -48,10 +51,37 @@ void *loader(void *hari_par){
         pcb.vruntime = (rand() % (maxrt - minrt + 1)) + minrt;
         pcb.rtime = (rand() % (maxrt - minrt + 1)) + minrt;
         pcb.decay_factor = (float)weight0/pcb.weight;
+        
+        
+        fp = fopen("prog000.elf", "r");
+        if(fp == NULL)
+            printf("No such file or directory\n");
+        while(fgets(line, sizeof(line), fp)!=NULL)
+	    {
+            if(lnum == 0){
+		        printf("%s",line);
+                //pcb.mm.text = line;
+                //printf(".text = %#8X\n", pcb.mm.text);
+            }else if(lnum == 1){
+		        printf("%s",line);
+                //pcb.mm.data = &line;
+                //printf(".data = %X\n", pcb.mm.data);
+            }else{
+                printf("line = %s", line);
+                printf("char = %c\n", line[7]);
+                int num = (int)strtol(line, NULL, 16);
+                printf("hex = %08X\n", num);
+            }    
+            lnum++;
+	    }
+        lnum = 0;
+	    fclose(fp);
+        //pcb.mm.text = fget(line, 30, fp);
+        //printf(".text = %x\n", pcb.mm.text);
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
 
         //Prozesu bat dagokion zuhaitzean sartu.
-        if(pcb.pid != 83){
+        //if(pcb.pid != 83){
             if(cpu.core[i].root != NULL){
                 insert(cpu.core[i].root, pcb);
                 cpu.core[i].treetam++;
@@ -59,7 +89,7 @@ void *loader(void *hari_par){
                 cpu.core[i].root = new_node(pcb);
                 cpu.core[i].treetam++;
             }
-        }
+        //}
         i = (i + 1) % param->core_kop;
         j++;
     }
