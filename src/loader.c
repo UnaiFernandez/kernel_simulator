@@ -12,12 +12,21 @@ struct process_control_block atera;
 struct node *root;
 volatile int treetam = 0;
 struct node *lefmost;
+
+void deleteword(char *str){
+    int i, j = 6;
+
+    for(i = 0; i < 8; i++){
+       str[i] = str[j]; 
+    } 
+}
+
 /*
  * Process generator funtzioa
  */
 void *loader(void *hari_par){
 
-    int j, i, p_kop, p, tam, lnum;
+    int j, i, p_kop, p, tam, lnum, kont;
     int lower = 0, upper = 40, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb;
@@ -32,6 +41,7 @@ void *loader(void *hari_par){
     tam = p_kop;
     lefmost = root;
     lnum = 0;
+    kont = 0;
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
@@ -59,22 +69,24 @@ void *loader(void *hari_par){
         while(fgets(line, sizeof(line), fp)!=NULL)
 	    {
             if(lnum == 0){
-		        printf("%s",line);
-                //pcb.mm.text = line;
-                //printf(".text = %#8X\n", pcb.mm.text);
+                deleteword(line);
+                pcb.mm.text = (int)strtol(line, NULL, 16);
+                printf(".text = %08X\n", pcb.mm.text);
             }else if(lnum == 1){
-		        printf("%s",line);
-                //pcb.mm.data = &line;
-                //printf(".data = %X\n", pcb.mm.data);
+                deleteword(line);
+                pcb.mm.data = (int)strtol(line, NULL, 16);
+                printf(".data = %08X\n", pcb.mm.data);
             }else{
-                printf("line = %s", line);
-                printf("char = %c\n", line[7]);
+                //printf("line = %s", line);
+                //printf("char = %c\n", line[7]);
                 int num = (int)strtol(line, NULL, 16);
-                printf("hex = %08X\n", num);
+                printf("0x%06X [%08X]\n", kont, num);
+                kont+=4;
             }    
             lnum++;
 	    }
         lnum = 0;
+        kont = 0;
 	    fclose(fp);
         //pcb.mm.text = fget(line, 30, fp);
         //printf(".text = %x\n", pcb.mm.text);
