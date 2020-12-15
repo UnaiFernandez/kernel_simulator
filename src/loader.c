@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 
 #include "define_hariak.h"
 #include "tree.h"
@@ -175,6 +176,16 @@ double hextodec(char *hex, int len){
 }
 
 
+void addrcomm(char *hex){
+    int i, j = 2;
+
+    for(i = 0; i < 8; i++){
+       hex[i] = hex[j]; 
+       j++;
+    }
+}
+
+
 void translator(char *command, char* reg, char *dat){
     char *a = command;
     char *b = reg;
@@ -203,13 +214,13 @@ void deleteword(char *str){
  */
 void *loader(void *hari_par){
 
-    int j, i, p_kop, p, tam, lnum, kont;
+    int j, i, p_kop, p, tam, lnum, kont, dat, num;
     int lower = 0, upper = 40, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb;
     FILE *fp;
     char line[16];
-    char *a, *dat, *com, *reg;
+    char *a, *com, *reg, *reg2, *reg3;
     char registroa;
 
     //Hasieraketak
@@ -263,10 +274,22 @@ void *loader(void *hari_par){
                     printf(".data %06X\n", pcb.mm.data);
                 if(pcb.mm.data > kont){
                     com = getcommand(line[0]);
-                    reg = getregister(line[1]);
-                    int num = (int)strtol(line, NULL, 16);
-                    int numint = hextodec(line, 8);
-                    printf("0x%06X [%08X][%d]     %s,  %s\n", kont, num, numint, com, reg);
+                    if(strstr(com,"ld") != NULL || strstr(com, "st") != NULL){
+                        reg = getregister(line[1]);
+                        num = (int)strtol(line, NULL, 16);
+                        char *lag;
+                        lag = line;
+                        addrcomm(lag);
+                        dat = (int)strtol(lag, NULL, 16);
+                        printf("0x%06X [%08X]    %s   %s 0x%06X\n", kont, num, com, reg, dat);
+                    }else if(strstr(com, "add") != NULL){
+                        reg = getregister(line[1]);
+                        reg2 = getregister(line[2]);
+                        reg3 = getregister(line[3]);
+                        printf("0x%06X [%08X]    %s   %s,%s,%s\n", kont, num, com, reg, reg2, reg3);
+                    }else{
+                        printf("0x%06X [%08X]    %s\n", kont, num, com);
+                    }
                 }else{
                     int num = (int)strtol(line, NULL, 16);
                     printf("0x%06X [%08X]\n", kont, num);
