@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <time.h>
+#include <math.h>
 
 #include "define_hariak.h"
 #include "tree.h"
@@ -12,6 +13,182 @@ struct process_control_block atera;
 struct node *root;
 volatile int treetam = 0;
 struct node *lefmost;
+
+
+char* getcommand(char command){
+    char *com;
+    switch (command){
+            case '0':
+                com = "ld";
+                break;
+            case '1':
+                com = "st";
+                break;
+            case '2':
+                com = "add";
+                break;
+            case 'F':
+                com = "exit";
+                break;
+            default:
+                abort ();
+      }
+    return com;
+}
+
+
+char* getregister(char regist){
+    char *reg;
+    switch (regist){
+            case '0':
+                reg = "r0";
+                break;
+            case '1':
+                reg = "r1";
+                break;
+            case '2':
+                reg = "r2";
+                break;
+            case '3':
+                reg = "r3";
+                break;
+            case '4':
+                reg = "r4";
+                break;
+            case '5':
+                reg = "r5";
+                break;
+            case '6':
+                reg = "r6";
+                break;
+            case '7':
+                reg = "r7";
+                break;
+            case '8':
+                reg = "r8";
+                break;
+            case '9':
+                reg = "r9";
+                break;
+            case 'A':
+                reg = "r10";
+                break;
+            case 'B':
+                reg = "r11";
+                break;
+            case 'C':
+                reg = "r12";
+                break;
+            case 'D':
+                reg = "r13";
+                break;
+            case 'E':
+                reg = "r14";
+                break;
+            case 'F':
+                reg = "r15";
+                break;
+            default:
+                abort ();
+      }
+    return reg;
+}
+
+
+double hextodec(char *hex, int len){
+    int i, j;
+    double dec = 0;
+    char dig;
+    j = -1;
+    for(i = 0; i < len; i++){
+        dig = hex[i];
+        switch (dig){
+            case '0':
+                j++;
+                dec += 0*pow(16,j);
+                break;
+            case '1':
+                j++;
+                dec += 1*pow(16,j);
+                break;
+            case '2':
+                j++;
+                dec += 2*pow(16,j);
+                break;
+            case '3':
+                j++;
+                dec += 3*pow(16,j);
+                break;
+            case '4':
+                j++;
+                dec += 4*pow(16,j);
+                break;
+            case '5':
+                j++;
+                dec += 5*pow(16,j);
+                break;
+            case '6':
+                j++;
+                dec += 6*pow(16,j);
+                break;
+            case '7':
+                j++;
+                dec += 7*pow(16,j);
+                break;
+            case '8':
+                j++;
+                dec += 8*pow(16,j);
+                break;
+            case '9':
+                j++;
+                dec += 9*pow(16,j);
+                break;
+            case 'A':
+                j++;
+                dec += 10*pow(16,j);
+                break;
+            case 'B':
+                j++;
+                dec += 11*pow(16,j);
+                break;
+            case 'C':
+                j++;
+                dec += 12*pow(16,j);
+                break;
+            case 'D':
+                j++;
+                dec += 13*pow(16,j);
+                break;
+            case 'E':
+                j++;
+                dec += 14*pow(16,j);
+                break;
+            case 'F':
+                j++;
+                dec += 15*pow(16,j);
+                break;
+            default:
+                abort ();
+      }
+    }
+    return dec;
+}
+
+
+void translator(char *command, char* reg, char *dat){
+    char *a = command;
+    char *b = reg;
+    while(*a){
+        a++;
+    }
+    while (*b) {
+        *a = *b;
+        b++;
+        a++;
+    }
+    *a = '\0';
+    printf("command = %s", command);
+}
 
 void deleteword(char *str){
     int i, j = 6;
@@ -32,16 +209,20 @@ void *loader(void *hari_par){
     struct process_control_block pcb;
     FILE *fp;
     char line[16];
+    char *a, *dat, *com, *reg;
+    char registroa;
 
     //Hasieraketak
     param = (struct hari_param *)hari_par;
     p_kop = param->p_kop;
     i = 0;
+    j = 0;
     p = 0;
     tam = p_kop;
     lefmost = root;
     lnum = 0;
     kont = 0;
+
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
@@ -71,16 +252,25 @@ void *loader(void *hari_par){
             if(lnum == 0){
                 deleteword(line);
                 pcb.mm.text = (int)strtol(line, NULL, 16);
-                printf(".text = %08X\n", pcb.mm.text);
+                printf(".text %06X\n", pcb.mm.text);
             }else if(lnum == 1){
                 deleteword(line);
-                pcb.mm.data = (int)strtol(line, NULL, 16);
-                printf(".data = %08X\n", pcb.mm.data);
+                pcb.mm.data = (int)strtol(line, NULL, 16);    
             }else{
                 //printf("line = %s", line);
                 //printf("char = %c\n", line[7]);
-                int num = (int)strtol(line, NULL, 16);
-                printf("0x%06X [%08X]\n", kont, num);
+                if(pcb.mm.data == kont)
+                    printf(".data %06X\n", pcb.mm.data);
+                if(pcb.mm.data > kont){
+                    com = getcommand(line[0]);
+                    reg = getregister(line[1]);
+                    int num = (int)strtol(line, NULL, 16);
+                    int numint = hextodec(line, 8);
+                    printf("0x%06X [%08X][%d]     %s,  %s\n", kont, num, numint, com, reg);
+                }else{
+                    int num = (int)strtol(line, NULL, 16);
+                    printf("0x%06X [%08X]\n", kont, num);
+                }
                 kont+=4;
             }    
             lnum++;

@@ -2,7 +2,7 @@
 
 
 CC = gcc
-CFLAGS = -g -pthread -ggdb
+CFLAGS = -g -pthread -ggdb -lm
 OBJ = binaries/seso
 
 all:
