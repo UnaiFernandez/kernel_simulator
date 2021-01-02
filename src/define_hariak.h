@@ -60,18 +60,9 @@ extern pthread_cond_t cond;
 extern pthread_cond_t cond2;
 extern int done;
 
-// prozesu array-a eta bere tamaina
-//extern struct process_control_block *sch_arr;
-//extern int sch_arr_tam;
-
-//extern struct tree *bst;
-//extern struct node *root;
-//extern volatile int treetam;
 
 //Core en prozesu kopurua gordetzeko array-a
 extern int busy_arr[MAX_CORE_KOP];
-//Prozesu gitxien dituen corearen identifikadorea
-//extern int minimum;
 
 //core struct
 struct core_t{
@@ -128,6 +119,8 @@ extern int *mem;
 //memoriako array
 extern struct mem *memarr; //malloc egin
 
+//ir eta pc erregistroak
+extern int ir;
 #endif
 
 #ifdef DEBUG

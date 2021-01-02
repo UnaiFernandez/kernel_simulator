@@ -27,7 +27,7 @@ end
 
 function exec4()
     build()
-    lmake_exec("binaries/seso -p10 -m10 -t40 -c4")
+    lmake_exec("binaries/seso -p3 -m10 -t40 -c1")
 end
 
 function exec4fast()

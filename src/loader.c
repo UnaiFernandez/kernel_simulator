@@ -5,9 +5,11 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
+#include <errno.h>
 
 #include "define_hariak.h"
 #include "tree.h"
+
 
 
 struct process_control_block atera;
@@ -15,24 +17,14 @@ struct node *root;
 volatile int treetam = 0;
 struct node *lefmost;
 
-
 char* getcommand(char command){
     char *com;
     switch (command){
-            case '0':
-                com = "ld";
-                break;
-            case '1':
-                com = "st";
-                break;
-            case '2':
-                com = "add";
-                break;
-            case 'F':
-                com = "exit";
-                break;
-            default:
-                abort ();
+            case '0': com = "ld"; break;
+            case '1': com = "st"; break;
+            case '2': com = "add"; break;
+            case 'F': com = "exit"; break;
+            default: abort ();
       }
     return com;
 }
@@ -41,140 +33,85 @@ char* getcommand(char command){
 char* getregister(char regist){
     char *reg;
     switch (regist){
-            case '0':
-                reg = "r0";
-                break;
-            case '1':
-                reg = "r1";
-                break;
-            case '2':
-                reg = "r2";
-                break;
-            case '3':
-                reg = "r3";
-                break;
-            case '4':
-                reg = "r4";
-                break;
-            case '5':
-                reg = "r5";
-                break;
-            case '6':
-                reg = "r6";
-                break;
-            case '7':
-                reg = "r7";
-                break;
-            case '8':
-                reg = "r8";
-                break;
-            case '9':
-                reg = "r9";
-                break;
-            case 'A':
-                reg = "r10";
-                break;
-            case 'B':
-                reg = "r11";
-                break;
-            case 'C':
-                reg = "r12";
-                break;
-            case 'D':
-                reg = "r13";
-                break;
-            case 'E':
-                reg = "r14";
-                break;
-            case 'F':
-                reg = "r15";
-                break;
-            default:
-                abort ();
+            case '0': reg = "r0"; break;
+            case '1': reg = "r1"; break;
+            case '2': reg = "r2"; break;
+            case '3': reg = "r3"; break;
+            case '4': reg = "r4"; break;
+            case '5': reg = "r5"; break;
+            case '6': reg = "r6"; break;
+            case '7': reg = "r7"; break;
+            case '8': reg = "r8"; break;
+            case '9': reg = "r9"; break;
+            case 'A': reg = "r10"; break;
+            case 'B': reg = "r11"; break;
+            case 'C': reg = "r12"; break;
+            case 'D': reg = "r13"; break;
+            case 'E': reg = "r14"; break;
+            case 'F': reg = "r15"; break;
+            default: abort ();
       }
     return reg;
 }
 
 
-double hextodec(char *hex, int len){
-    int i, j;
-    double dec = 0;
-    char dig;
-    j = -1;
-    for(i = 0; i < len; i++){
-        dig = hex[i];
-        switch (dig){
-            case '0':
-                j++;
-                dec += 0*pow(16,j);
-                break;
-            case '1':
-                j++;
-                dec += 1*pow(16,j);
-                break;
-            case '2':
-                j++;
-                dec += 2*pow(16,j);
-                break;
-            case '3':
-                j++;
-                dec += 3*pow(16,j);
-                break;
-            case '4':
-                j++;
-                dec += 4*pow(16,j);
-                break;
-            case '5':
-                j++;
-                dec += 5*pow(16,j);
-                break;
-            case '6':
-                j++;
-                dec += 6*pow(16,j);
-                break;
-            case '7':
-                j++;
-                dec += 7*pow(16,j);
-                break;
-            case '8':
-                j++;
-                dec += 8*pow(16,j);
-                break;
-            case '9':
-                j++;
-                dec += 9*pow(16,j);
-                break;
-            case 'A':
-                j++;
-                dec += 10*pow(16,j);
-                break;
-            case 'B':
-                j++;
-                dec += 11*pow(16,j);
-                break;
-            case 'C':
-                j++;
-                dec += 12*pow(16,j);
-                break;
-            case 'D':
-                j++;
-                dec += 13*pow(16,j);
-                break;
-            case 'E':
-                j++;
-                dec += 14*pow(16,j);
-                break;
-            case 'F':
-                j++;
-                dec += 15*pow(16,j);
-                break;
-            default:
-                abort ();
-      }
+int getNum(char ch)
+{
+    int num=0;
+    if(ch>='0' && ch<='9')
+    {
+        num=ch-0x30;
     }
-    return dec;
+    else
+    {
+        switch(ch)
+        {
+            case 'A': case 'a': num=10; break;
+            case 'B': case 'b': num=11; break;
+            case 'C': case 'c': num=12; break;
+            case 'D': case 'd': num=13; break;
+            case 'E': case 'e': num=14; break;
+            case 'F': case 'f': num=15; break;
+            default: num=0;
+        }
+    }
+    return num;
 }
 
+
+int hex2int(char *hex)
+{
+    int i;
+    double power, x=0;
+    //double power;
+    for(i = 0; i < 8; i++){
+        power = pow(16,i);
+        printf("num = %c power = %f res = %f\n", hex[i], power, x);
+        x=(getNum(hex[i]))*power;
+    }
+    return x;
+}
+
+
+void getfilename(int line, char *filename[]){
+    FILE *fp;
+    int i;
+
+    fp = fopen("filenames.txt", "r");
+    if(fp == NULL){
+        perror("(getfilename)");
+    }
+    for(i = 0; i < line; i++){
+        fgets(filename[i], ID_LEN, fp);
+        printf("- %s", filename[i]);
+    }
+
+
+    //printf("last fname: %s", filename[i]);
+
+    fclose(fp);
+
+}
 
 void addrcomm(char *hex){
     int i, j = 2;
@@ -186,7 +123,7 @@ void addrcomm(char *hex){
 }
 
 
-void translator(char *command, char* reg, char *dat){
+/*void translator(char *command, char* reg, char *dat){
     char *a = command;
     char *b = reg;
     while(*a){
@@ -199,7 +136,7 @@ void translator(char *command, char* reg, char *dat){
     }
     *a = '\0';
     printf("command = %s", command);
-}
+}*/
 
 void deleteword(char *str){
     int i, j = 6;
@@ -220,20 +157,25 @@ void *loader(void *hari_par){
     struct process_control_block pcb;
     FILE *fp;
     char line[16];
-    char *a, *com, *reg, *reg2, *reg3;
-    char registroa;
+    char *a, *com, *reg, *reg2, *reg3, *fname;
+    //char registroa;
 
+    //char *filename = malloc((11+2)*sizeof(char));
     //Hasieraketak
     param = (struct hari_param *)hari_par;
     p_kop = param->p_kop;
-    i = 0;
+    //i = 0;
     j = 0;
-    p = 0;
-    tam = p_kop;
+    //p = 0;
+    //tam = p_kop;
     lefmost = root;
     lnum = 0;
     kont = 0;
 
+    //char **filenames = malloc(p_kop*sizeof(char*));
+    //for(i = 0; i < p_kop; i++){
+      //  filenames[i] = malloc((ID_LEN+1)*sizeof(char));
+    //}
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
@@ -245,19 +187,35 @@ void *loader(void *hari_par){
 
         sem_wait(&semp);
 
+
+        char *f;
+        //getfilename(j+1, filenames);
+        //printf("[filename] %s\n", filenames[j]);
+
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
-        pcb.pid = rand() % 100;
+        pcb.pid = j;//rand() % 100;
         pcb.nice =  (rand() % (upper - lower + 1)) + lower;
         pcb.weight = weight[pcb.nice];
-        pcb.vruntime = (rand() % (maxrt - minrt + 1)) + minrt;
-        pcb.rtime = (rand() % (maxrt - minrt + 1)) + minrt;
         pcb.decay_factor = (float)weight0/pcb.weight;
-        
-        
+        pcb.rtime = 0;
+        pcb.vruntime = 0;
+
+
+
+
+        //fp = fopen("prog000.elf", "r");
+        //char *f;
+        //int a = strcmp(filenames[j], f);
+        //printf("%s\n", filenames[j]);
+        //printf("%s\n", filenames[j]);
+        //printf("%d", a);
+        //fp = fopen(filenames[j], "r");
         fp = fopen("prog000.elf", "r");
-        if(fp == NULL)
-            printf("No such file or directory\n");
+        if(fp == NULL){
+            perror("Could not open file");
+            //printf("No such file or directory\n");
+        }
         while(fgets(line, sizeof(line), fp)!=NULL)
 	    {
             if(lnum == 0){
@@ -268,8 +226,6 @@ void *loader(void *hari_par){
                 deleteword(line);
                 pcb.mm.data = (int)strtol(line, NULL, 16);    
             }else{
-                //printf("line = %s", line);
-                //printf("char = %c\n", line[7]);
                 if(pcb.mm.data == kont)
                     printf(".data %06X\n", pcb.mm.data);
                 if(pcb.mm.data > kont){
@@ -281,11 +237,19 @@ void *loader(void *hari_par){
                         lag = line;
                         addrcomm(lag);
                         dat = (int)strtol(lag, NULL, 16);
+
+                        pcb.vruntime = pcb.vruntime + 7;
+                        pcb.rtime = pcb.rtime + 7;
+                        
                         printf("0x%06X [%08X]    %s   %s 0x%06X\n", kont, num, com, reg, dat);
                     }else if(strstr(com, "add") != NULL){
                         reg = getregister(line[1]);
                         reg2 = getregister(line[2]);
                         reg3 = getregister(line[3]);
+                        
+                        pcb.vruntime = pcb.vruntime + 5;
+                        pcb.rtime = pcb.rtime + 5;
+
                         printf("0x%06X [%08X]    %s   %s,%s,%s\n", kont, num, com, reg, reg2, reg3);
                     }else{
                         printf("0x%06X [%08X]    %s\n", kont, num, com);
@@ -298,11 +262,11 @@ void *loader(void *hari_par){
             }    
             lnum++;
 	    }
+        printf("rtimes %d = %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         lnum = 0;
         kont = 0;
 	    fclose(fp);
-        //pcb.mm.text = fget(line, 30, fp);
-        //printf(".text = %x\n", pcb.mm.text);
+        
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
 
         //Prozesu bat dagokion zuhaitzean sartu.

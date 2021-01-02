@@ -94,6 +94,7 @@ void *scheduler_dispatcher(void *hari_par){
                 execdata = cpu.core[i].exec->data;
                 cpu.core[i].root = delete(cpu.core[i].root, cpu.core[i].exec->data);
                 cpu.core[i].treetam--;
+                //printf("╔═══════════════════════════════════╗\n\n                core%d                \nid: %d    vruntime: %d\n╚═══════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
                 printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
 
                 vrunt =execdata.vruntime;
@@ -123,6 +124,7 @@ void *scheduler_dispatcher(void *hari_par){
                 }
             }else{
                 cpu.core[i].root = new_node(nulua);
+                //printf("╔═══════════════════════════════════╗\n\n                core%d                \nid: %d    vruntime: %d\n╚═══════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
                 printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, nulua.pid, nulua.vruntime);
                 //treetam++;
             }
