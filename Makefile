@@ -10,7 +10,7 @@ all:
 exec1:
 		./binaries/seso -p1 -m10 -t40 -c1
 exec4:
-		./binaries/seso -p10 -m10 -t40 -c4
+		./binaries/seso -p4 -m10 -t40 -c1
 exec10:
 		./binaries/seso -p10 -m10 -t40 -c10
 

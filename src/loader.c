@@ -79,28 +79,11 @@ int getNum(char ch)
 }
 
 
-
-void getfilename(int line, char *filename[]){
-    FILE *fp;
-    int i;
-
-    fp = fopen("filenames.txt", "r");
-    if(fp == NULL){
-        perror("(getfilename)");
-    }
-    for(i = 0; i < line; i++){
-        fgets(filename[i], ID_LEN+1, fp);
-        printf("- %s\n", filename[i]);
-    }
-
-    fclose(fp);
-}
-
 void addrcomm(char *hex){
     int i, j = 2;
 
     for(i = 0; i < 8; i++){
-       hex[i] = hex[j]; 
+       hex[i] = hex[j];
        j++;
     }
 }
@@ -110,8 +93,8 @@ void deleteword(char *str){
     int i, j = 6;
 
     for(i = 0; i < 8; i++){
-       str[i] = str[j]; 
-    } 
+       str[i] = str[j];
+    }
 }
 
 
@@ -129,11 +112,10 @@ void *loader(void *hari_par){
     struct hari_param *param;
     struct process_control_block pcb;
     FILE *fp;
-    char line[16];
-    char *a, *com, *reg, *reg2, *reg3, *fname;
+    char line[16], file_name[16];
+    char *a, *com, *reg, *reg2, *reg3;
     //char registroa;
 
-    //char *filename = malloc((11+2)*sizeof(char));
     //Hasieraketak
     param = (struct hari_param *)hari_par;
     p_kop = param->p_kop;
@@ -145,14 +127,11 @@ void *loader(void *hari_par){
     lnum = 0;
     kont = 0;
 
-    char **filenames = malloc(p_kop*sizeof(char*));
-    for(i = 0; i < p_kop; i++){
-        filenames[i] = malloc((ID_LEN+1)*sizeof(char));
-    }
+
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
-        getfilename(j+1, filenames);
+    //getfilename(j+1, filenames);
     //Funtzioko loop-a
     while(j < p_kop){
     //while(1){
@@ -161,9 +140,11 @@ void *loader(void *hari_par){
 
         sem_wait(&semp);
 
-
+        printf("j = %03d\n", j);
+        //Fitxategiaren izena osatu
+        sprintf(file_name, "%s%03d.elf", default_filename, j);
         //char *f;
-        printf("[filename] %s\n", filenames[j]);
+        //printf("[filename] %s\n", filenames[j]);
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
@@ -177,14 +158,9 @@ void *loader(void *hari_par){
 
 
 
-        //fp = fopen("prog000.elf", "r");
-        //char *f;
-        //int a = strcmp(filenames[j], f);
-        //printf("%s\n", filenames[j]);
-        //printf("%s\n", filenames[j]);
-        //printf("%d", a);
-        printf("[filename] %ssdlf\n", filenames[j]);
-        fp = fopen(filenames[j], "r");
+
+        printf("%s\n", file_name);
+        fp = fopen(file_name, "r");
         //fp = fopen("src/prog000.elf", "r");
         if(fp == NULL){
             perror("Could not open file");
@@ -196,7 +172,7 @@ void *loader(void *hari_par){
                 printf(".text %06X\n", pcb.mm.text);
             }else if(lnum == 1){
                 deleteword(line);
-                pcb.mm.data = (int)strtol(line, NULL, 16);    
+                pcb.mm.data = (int)strtol(line, NULL, 16);
             }else{
                 if(pcb.mm.data == kont)
                     printf(".data %06X %d\n", pcb.mm.data, pcb.mm.data);
@@ -212,13 +188,13 @@ void *loader(void *hari_par){
 
                         pcb.vruntime = pcb.vruntime + 7;
                         pcb.rtime = pcb.rtime + 7;
-                        
+
                         printf("0x%06X [%08X]    %s   %s 0x%06X\n", kont, num, com, reg, dat);
                     }else if(strstr(com, "add") != NULL){
                         reg = getregister(line[1]);
                         reg2 = getregister(line[2]);
                         reg3 = getregister(line[3]);
-                        
+
                         pcb.vruntime = pcb.vruntime + 5;
                         pcb.rtime = pcb.rtime + 5;
 
@@ -231,14 +207,14 @@ void *loader(void *hari_par){
                     printf("0x%06X [%08X] %d\n", kont, num, num);
                 }
                 kont+=4;
-            }    
+            }
             lnum++;
         }
         printf("rtimes %d = %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         lnum = 0;
         kont = 0;
 	    fclose(fp);
-        
+
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
 
         //Prozesu bat dagokion zuhaitzean sartu.

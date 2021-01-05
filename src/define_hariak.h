@@ -11,6 +11,7 @@
 #define weight0 1024
 #define ADDRTAM 2
 #define ID_LEN 30
+#define default_filename "prog/prog"
 
 // Hariaren parametroak
 struct hari_param{
@@ -46,6 +47,7 @@ struct process_control_block{
     int rtime;
     int ptbr;
     struct mm mm;
+    int err[16];
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko
