@@ -30,7 +30,7 @@ void *clockfunc(void *hari_param);
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
 //memory management
 struct mm{
-    unsigned int text;
+    int text;
     int data;
     int pgb;
 };
@@ -114,13 +114,15 @@ extern int f_addr;
 //  int helb;
 //  struct frame frame;
 //};
-extern int *mem;
+
 
 //memoriako array
-extern struct mem *memarr; //malloc egin
+extern int mem[16777216];
+
 
 //ir eta pc erregistroak
 extern int ir;
+extern int pc;
 #endif
 
 #ifdef DEBUG

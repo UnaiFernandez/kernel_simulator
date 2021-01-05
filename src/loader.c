@@ -79,19 +79,6 @@ int getNum(char ch)
 }
 
 
-int hex2int(char *hex)
-{
-    int i;
-    double power, x=0;
-    //double power;
-    for(i = 0; i < 8; i++){
-        power = pow(16,i);
-        printf("num = %c power = %f res = %f\n", hex[i], power, x);
-        x=(getNum(hex[i]))*power;
-    }
-    return x;
-}
-
 
 void getfilename(int line, char *filename[]){
     FILE *fp;
@@ -102,15 +89,11 @@ void getfilename(int line, char *filename[]){
         perror("(getfilename)");
     }
     for(i = 0; i < line; i++){
-        fgets(filename[i], ID_LEN, fp);
-        printf("- %s", filename[i]);
+        fgets(filename[i], ID_LEN+1, fp);
+        printf("- %s\n", filename[i]);
     }
 
-
-    //printf("last fname: %s", filename[i]);
-
     fclose(fp);
-
 }
 
 void addrcomm(char *hex){
@@ -123,27 +106,17 @@ void addrcomm(char *hex){
 }
 
 
-/*void translator(char *command, char* reg, char *dat){
-    char *a = command;
-    char *b = reg;
-    while(*a){
-        a++;
-    }
-    while (*b) {
-        *a = *b;
-        b++;
-        a++;
-    }
-    *a = '\0';
-    printf("command = %s", command);
-}*/
-
 void deleteword(char *str){
     int i, j = 6;
 
     for(i = 0; i < 8; i++){
        str[i] = str[j]; 
     } 
+}
+
+
+void storedata(){
+
 }
 
 /*
@@ -172,13 +145,14 @@ void *loader(void *hari_par){
     lnum = 0;
     kont = 0;
 
-    //char **filenames = malloc(p_kop*sizeof(char*));
-    //for(i = 0; i < p_kop; i++){
-      //  filenames[i] = malloc((ID_LEN+1)*sizeof(char));
-    //}
+    char **filenames = malloc(p_kop*sizeof(char*));
+    for(i = 0; i < p_kop; i++){
+        filenames[i] = malloc((ID_LEN+1)*sizeof(char));
+    }
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
+        getfilename(j+1, filenames);
     //Funtzioko loop-a
     while(j < p_kop){
     //while(1){
@@ -188,9 +162,8 @@ void *loader(void *hari_par){
         sem_wait(&semp);
 
 
-        char *f;
-        //getfilename(j+1, filenames);
-        //printf("[filename] %s\n", filenames[j]);
+        //char *f;
+        printf("[filename] %s\n", filenames[j]);
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
@@ -210,14 +183,13 @@ void *loader(void *hari_par){
         //printf("%s\n", filenames[j]);
         //printf("%s\n", filenames[j]);
         //printf("%d", a);
-        //fp = fopen(filenames[j], "r");
-        fp = fopen("prog000.elf", "r");
+        printf("[filename] %ssdlf\n", filenames[j]);
+        fp = fopen(filenames[j], "r");
+        //fp = fopen("src/prog000.elf", "r");
         if(fp == NULL){
             perror("Could not open file");
-            //printf("No such file or directory\n");
         }
-        while(fgets(line, sizeof(line), fp)!=NULL)
-	    {
+        while(fgets(line, sizeof(line), fp) != NULL){
             if(lnum == 0){
                 deleteword(line);
                 pcb.mm.text = (int)strtol(line, NULL, 16);
@@ -227,7 +199,7 @@ void *loader(void *hari_par){
                 pcb.mm.data = (int)strtol(line, NULL, 16);    
             }else{
                 if(pcb.mm.data == kont)
-                    printf(".data %06X\n", pcb.mm.data);
+                    printf(".data %06X %d\n", pcb.mm.data, pcb.mm.data);
                 if(pcb.mm.data > kont){
                     com = getcommand(line[0]);
                     if(strstr(com,"ld") != NULL || strstr(com, "st") != NULL){
@@ -256,12 +228,12 @@ void *loader(void *hari_par){
                     }
                 }else{
                     int num = (int)strtol(line, NULL, 16);
-                    printf("0x%06X [%08X]\n", kont, num);
+                    printf("0x%06X [%08X] %d\n", kont, num, num);
                 }
                 kont+=4;
             }    
             lnum++;
-	    }
+        }
         printf("rtimes %d = %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         lnum = 0;
         kont = 0;

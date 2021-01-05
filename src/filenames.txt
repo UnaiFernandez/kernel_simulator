@@ -1,10 +1,10 @@
 prog000.elf
 prog001.elf
 prog002.elf
-prog003.elf
-prog004.elf
-prog005.elf
-prog006.elf
-prog007.elf
-prog008.elf
-prog009.elf
+prog/prog003.elf
+prog/prog004.elf
+prog/prog005.elf
+prog/prog006.elf
+prog/prog007.elf
+prog/prog008.elf
+prog/prog009.elf
