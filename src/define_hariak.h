@@ -12,6 +12,8 @@
 #define ADDRTAM 2
 #define ID_LEN 30
 #define default_filename "prog/prog"
+//#define MEM_CAP 16777216
+#define MEM_CAP 20
 
 // Hariaren parametroak
 struct hari_param{
@@ -119,8 +121,16 @@ extern int f_addr;
 
 
 //memoriako array
-extern int mem[16777216];
+extern int mem[MEM_CAP];
 
+
+//memoria hutsa non dagoen jakiteko helbideak
+struct freequeue{
+    int addr;
+    int freespace;
+};
+
+extern struct freequeue *freemem;
 
 //ir eta pc erregistroak
 extern int ir;

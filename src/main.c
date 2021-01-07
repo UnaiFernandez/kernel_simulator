@@ -14,7 +14,8 @@ struct process_control_block *sch_arr;
 int sch_arr_tam = 0;
 int *arr;
 struct cpu cpu;
-int mem[16777216];
+int mem[MEM_CAP];
+struct freequeue *freemem;
 sem_t semt, semc, semp;
 
 
@@ -33,6 +34,7 @@ void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop){
     sch_arr = malloc(proz_kop * sizeof(pcb));
     arr = malloc(core_kop * sizeof(int));
     sch_arr_tam = proz_kop;
+    freemem = malloc(MEM_CAP * sizeof(struct freequeue));
 
     printf("\n");
     printf("\n");
@@ -164,5 +166,6 @@ int main(int argc, char *argv[]){
         waitpid(-1, NULL, 0);
 
     free((void *)sch_arr);
+    free(freemem);
     return(0);
 }

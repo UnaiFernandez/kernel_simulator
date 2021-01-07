@@ -96,10 +96,81 @@ void deleteword(char *str){
        str[i] = str[j];
     }
 }
+void initmem(){
+    int i;
+
+    for(i = 0; i < MEM_CAP; i++)
+        mem[i] = 0;
+}
 
 
-void storedata(){
+void initfreequeue(){
+    struct freequeue fq;
 
+    fq.addr = 0;
+    fq.freespace = MEM_CAP;
+
+    freemem[0] = fq;
+}
+
+void getfreequeue(int p_kop){
+    int i, j, addr, first, kont;
+    struct freequeue fq;
+    i = 0;
+    first = 0;
+    addr = 0;
+    fq.addr = 0;
+    fq.freespace = 0;
+
+    while(i < p_kop){
+        kont = 1;
+        for(j = addr; j < MEM_CAP; j++){
+            if(mem[j] == 0 && first == 0){
+                fq.addr = j;
+                first = 1;
+            }else if (mem[j] == 0 && first == 1)
+                kont++;
+            else if(mem[j] != 0 && first == 1){
+                first = 0;
+                addr = j;
+                break;
+            }
+            fq.freespace = kont;
+            freemem[i] = fq;
+        }
+        if(j < MEM_CAP)
+            i++;
+        else
+            break;
+    }
+printf("freemem [");
+i = 0;
+while(i < p_kop){
+    printf("(%d, %d)", freemem[i].addr, freemem[i].freespace);
+    i++;
+}
+printf("]\n");
+}
+
+
+int checkmemspace(int progsize, int p_kop){
+    int i, addr;
+    addr = -1;
+
+    for(i = 0; i < p_kop; i++){
+        if(freemem[i].freespace > progsize){
+            addr = freemem[i].addr;
+            break;
+        }    
+    }
+    return addr;
+}
+
+void storedata(int addr, int data){
+    if(addr != -1)
+        mem[addr] = data;
+    else
+        printf("There's no space for the program in memory!!\n");
 }
 
 /*
@@ -107,7 +178,7 @@ void storedata(){
  */
 void *loader(void *hari_par){
 
-    int j, i, p_kop, p, tam, lnum, kont, dat, num;
+    int j, i, p_kop, p, tam, lnum, kont, dat, num, progsize, memspace;
     int lower = 0, upper = 40, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb;
@@ -126,12 +197,17 @@ void *loader(void *hari_par){
     lefmost = root;
     lnum = 0;
     kont = 0;
+    progsize = 0;
 
 
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
-    //getfilename(j+1, filenames);
+    //memoria hasieratu 
+    initmem();
+    initfreequeue();
+
+
     //Funtzioko loop-a
     while(j < p_kop){
     //while(1){
@@ -140,11 +216,11 @@ void *loader(void *hari_par){
 
         sem_wait(&semp);
 
-        printf("j = %03d\n", j);
+        int orrtau = 4194304;
+        printf("orritaula = %06X\n", orrtau);
+
         //Fitxategiaren izena osatu
         sprintf(file_name, "%s%03d.elf", default_filename, j);
-        //char *f;
-        //printf("[filename] %s\n", filenames[j]);
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
@@ -156,9 +232,26 @@ void *loader(void *hari_par){
         pcb.vruntime = 0;
 
 
+        
+        getfreequeue(p_kop);
 
 
+        //fitxategiak dituen lerroak kontatu
+        fp = fopen(file_name, "r");
+        if(fp == NULL)
+            perror("Could not open file");
+        while(fgets(line, sizeof(line), fp) != NULL){
+            progsize++;
+        }
+        fclose(fp);
+        progsize = progsize - 2;
+        printf("progsize = %d\n", progsize);
+        memspace = checkmemspace(progsize, p_kop);
+        printf("memspace: 0x%06X\n", memspace);
+        progsize = 0;
 
+
+        //fitxategiko lerro bakoitza prozesatu
         printf("%s\n", file_name);
         fp = fopen(file_name, "r");
         //fp = fopen("src/prog000.elf", "r");
@@ -167,10 +260,12 @@ void *loader(void *hari_par){
         }
         while(fgets(line, sizeof(line), fp) != NULL){
             if(lnum == 0){
+                //Lehenengo lerroan dagoen .text balioa gorde
                 deleteword(line);
                 pcb.mm.text = (int)strtol(line, NULL, 16);
                 printf(".text %06X\n", pcb.mm.text);
             }else if(lnum == 1){
+                //bigarren lerroan dagoen .data balioa gorde
                 deleteword(line);
                 pcb.mm.data = (int)strtol(line, NULL, 16);
             }else{
@@ -188,6 +283,11 @@ void *loader(void *hari_par){
 
                         pcb.vruntime = pcb.vruntime + 7;
                         pcb.rtime = pcb.rtime + 7;
+                        
+                        //datua memorian gorde
+                        storedata(memspace, num);
+                        if(memspace != -1)
+                            memspace++;
 
                         printf("0x%06X [%08X]    %s   %s 0x%06X\n", kont, num, com, reg, dat);
                     }else if(strstr(com, "add") != NULL){
@@ -197,13 +297,29 @@ void *loader(void *hari_par){
 
                         pcb.vruntime = pcb.vruntime + 5;
                         pcb.rtime = pcb.rtime + 5;
+            
+                        //datua memorian gorde
+                        storedata(memspace, num);
+                        if(memspace != -1)
+                            memspace++;
 
                         printf("0x%06X [%08X]    %s   %s,%s,%s\n", kont, num, com, reg, reg2, reg3);
                     }else{
+                        //datua memorian gorde
+                        storedata(memspace, num);
+                        if(memspace != -1)
+                            memspace++;
+
                         printf("0x%06X [%08X]    %s\n", kont, num, com);
                     }
                 }else{
                     int num = (int)strtol(line, NULL, 16);
+
+                    //datua memorian gorde
+                    storedata(memspace, num);
+                    if(memspace != -1)
+                        memspace++;
+
                     printf("0x%06X [%08X] %d\n", kont, num, num);
                 }
                 kont+=4;
