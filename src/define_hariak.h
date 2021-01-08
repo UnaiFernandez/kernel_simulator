@@ -13,7 +13,7 @@
 #define ID_LEN 30
 #define default_filename "prog/prog"
 //#define MEM_CAP 16777216
-#define MEM_CAP 20
+#define MEM_CAP 40
 
 // Hariaren parametroak
 struct hari_param{

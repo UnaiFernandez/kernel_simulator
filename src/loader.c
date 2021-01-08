@@ -161,7 +161,7 @@ int checkmemspace(int progsize, int p_kop){
         if(freemem[i].freespace > progsize){
             addr = freemem[i].addr;
             break;
-        }    
+        }
     }
     return addr;
 }
@@ -203,7 +203,7 @@ void *loader(void *hari_par){
     //Hariaren hasierako informazioa pantailaratu
     printf("[PROCESS GENERATOR:       id = %d    name = %s   ]\n", param->id, param->name);
 
-    //memoria hasieratu 
+    //memoria hasieratu
     initmem();
     initfreequeue();
 
@@ -232,7 +232,7 @@ void *loader(void *hari_par){
         pcb.vruntime = 0;
 
 
-        
+
         getfreequeue(p_kop);
 
 
@@ -250,8 +250,11 @@ void *loader(void *hari_par){
         printf("memspace: 0x%06X\n", memspace);
         progsize = 0;
 
+      //  while(memspace == -1)
+        //  memspace = checkmemspace(progsize, p_kop);
 
         //fitxategiko lerro bakoitza prozesatu
+      //  if(memspace != -1){
         printf("%s\n", file_name);
         fp = fopen(file_name, "r");
         //fp = fopen("src/prog000.elf", "r");
@@ -283,7 +286,7 @@ void *loader(void *hari_par){
 
                         pcb.vruntime = pcb.vruntime + 7;
                         pcb.rtime = pcb.rtime + 7;
-                        
+
                         //datua memorian gorde
                         storedata(memspace, num);
                         if(memspace != -1)
@@ -297,7 +300,7 @@ void *loader(void *hari_par){
 
                         pcb.vruntime = pcb.vruntime + 5;
                         pcb.rtime = pcb.rtime + 5;
-            
+
                         //datua memorian gorde
                         storedata(memspace, num);
                         if(memspace != -1)
@@ -326,6 +329,7 @@ void *loader(void *hari_par){
             }
             lnum++;
         }
+      //}
         printf("rtimes %d = %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         lnum = 0;
         kont = 0;
