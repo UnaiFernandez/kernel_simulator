@@ -250,11 +250,9 @@ void *loader(void *hari_par){
         printf("memspace: 0x%06X\n", memspace);
         progsize = 0;
 
-      //  while(memspace == -1)
-        //  memspace = checkmemspace(progsize, p_kop);
 
+        if(memspace != -1){
         //fitxategiko lerro bakoitza prozesatu
-      //  if(memspace != -1){
         printf("%s\n", file_name);
         fp = fopen(file_name, "r");
         //fp = fopen("src/prog000.elf", "r");
@@ -329,7 +327,6 @@ void *loader(void *hari_par){
             }
             lnum++;
         }
-      //}
         printf("rtimes %d = %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         lnum = 0;
         kont = 0;
@@ -348,6 +345,7 @@ void *loader(void *hari_par){
             }
         //}
         i = (i + 1) % param->core_kop;
+        }
         j++;
     }
     /*for(int k = 0; k < param->core_kop; k++){
