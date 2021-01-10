@@ -217,7 +217,7 @@ void *loader(void *hari_par){
         sem_wait(&semp);
 
         int orrtau = 4194304;
-        printf("orritaula = %06X\n", orrtau);
+        DEBUG_WRITE("orritaula = %06X\n", orrtau);
 
         //Fitxategiaren izena osatu
         sprintf(file_name, "%s%03d.elf", default_filename, j);
@@ -234,8 +234,11 @@ void *loader(void *hari_par){
 
 
         getfreequeue(p_kop);
+        printf("\n");    
+        printf("\n");
+    
 
-
+        printf("%s\n", file_name);
         //fitxategiak dituen lerroak kontatu
         fp = fopen(file_name, "r");
         if(fp == NULL)
@@ -245,20 +248,20 @@ void *loader(void *hari_par){
         }
         fclose(fp);
         progsize = progsize - 2;
-        printf("progsize = %d\n", progsize);
+        printf("    -programaren tamaina: %d\n", progsize);
         memspace = checkmemspace(progsize, p_kop);
-        printf("memspace: 0x%06X\n", memspace);
+        printf("    -memspace: 0x%06X\n", memspace);
         progsize = 0;
 
 
         if(memspace != -1){
         //fitxategiko lerro bakoitza prozesatu
-        printf("%s\n", file_name);
         fp = fopen(file_name, "r");
         //fp = fopen("src/prog000.elf", "r");
         if(fp == NULL){
             perror("Could not open file");
         }
+        printf("╔════════════════════════════════════════╗\n");
         while(fgets(line, sizeof(line), fp) != NULL){
             if(lnum == 0){
                 //Lehenengo lerroan dagoen .text balioa gorde
@@ -328,6 +331,7 @@ void *loader(void *hari_par){
             lnum++;
         }
         printf("rtimes %d = %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
+        printf("╚═════════════════════════════════════════╝\n\n");
         lnum = 0;
         kont = 0;
 	    fclose(fp);
@@ -345,6 +349,9 @@ void *loader(void *hari_par){
             }
         //}
         i = (i + 1) % param->core_kop;
+        }else{
+            printf("[ERR]  There's no space in the memory!\n");
+            printf("\n");
         }
         j++;
     }
