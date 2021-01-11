@@ -41,8 +41,22 @@ pthread_mutex_t lock;
 /*
 * MMU-aren funtzioa
 */
-void mmu_function(){
+void mmu_function(int vaddr){
+    char helblog[6], orrz[4], desp[4];
+    int i, j, k, orrizenb, markozenb, desplaz;
 
+
+    //Lortu orri-zenbakia eta desplazamendua
+    sprintf(helblog, "%06X", vaddr);
+    sprintf(orrz, "%c%c%c", helblog[0], helblog[1], helblog[2]);
+    sprintf(desp, "%c%c%c", helblog[3], helblog[4], helblog[5]);
+    orrz[3] = '\0';
+    desp[3] = '\0';
+
+    orrizenb = (int)strtol(orrz, NULL, 16);
+    desplaz = (int)strtol(desp, NULL, 16);
+    printf("orri-zenbakia:%03X\n", orrizenb);
+    printf("desplazamendua:%03X\n", desplaz);
 }
 
 /*
@@ -83,6 +97,7 @@ void *scheduler_dispatcher(void *hari_par){
         if(i1 == 1){
             i1 = 0;
         }else{
+            mmu_function(6);
             //printf("nextcore = %d\n", nextCore);
             if(cpu.core[i].treetam >= 1 /*&& core.core_num == nextCore*/){
                 if(cpu.core[i].busy != 1){

@@ -12,9 +12,9 @@
 #define ADDRTAM 2
 #define ID_LEN 30
 #define default_filename "prog/prog"
-//#define MEM_CAP 16777216
-#define MEM_CAP 40
-
+#define MEM_CAP 16777216
+//#define MEM_CAP 100
+#define orrtau 4194304
 // Hariaren parametroak
 struct hari_param{
     int id;
