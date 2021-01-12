@@ -41,22 +41,28 @@ pthread_mutex_t lock;
 /*
 * MMU-aren funtzioa
 */
-void mmu_function(int vaddr){
-    char helblog[6], orrz[6], desp[2];
-    int i, j, k, orrizenb, markozenb, desplaz;
+int mmu_function(int vaddr, int ptbr){
+    char helblog[7], orrz[6], desp[2];
+    int i, j, k, orrizenb, markozenb, desplaz, haddr;
 
 
     //Lortu orri-zenbakia eta desplazamendua
     sprintf(helblog, "%06X", vaddr);
     sprintf(orrz, "%c%c%c%c%c", helblog[0], helblog[1], helblog[2], helblog[3], helblog[4]);
     sprintf(desp, "%c", helblog[5]);
-    orrz[6] = '\0';
-    desp[2] = '\0';
+    orrz[5] = '\0';
+    desp[1] = '\0';
 
     orrizenb = (int)strtol(orrz, NULL, 16);
     desplaz = (int)strtol(desp, NULL, 16);
     printf("orri-zenbakia:%05X\n", orrizenb);
     printf("desplazamendua:%01X\n", desplaz);
+
+    markozenb = mem[ptbr+orrizenb];
+    printf("markozenbakia:%06X\n", markozenb);
+    haddr = markozenb + desplaz;
+
+    return haddr;
 }
 
 /*
@@ -66,7 +72,7 @@ void *scheduler_dispatcher(void *hari_par){
 
     struct hari_param *param;
     param = (struct hari_param *)hari_par;
-    int core_num, i1 = 1, vrunt, i, sch_tam, nextCore;
+    int core_num, i1 = 1, vrunt, i, sch_tam, nextCore, haddr;
     struct process_control_block nulua, execdata;
     //struct core_t core;
     struct node *lag, *exec, *execold;
@@ -87,6 +93,7 @@ void *scheduler_dispatcher(void *hari_par){
     cpu.core[i].core_num = core_num;
     //cpu.core[i].root = root;
     cpu.core[i].busy = 0;
+    cpu.core[i].pc = 0;
     //sch_tam = sch_arr_tam;
     initArray(busy_arr);
 
@@ -97,7 +104,6 @@ void *scheduler_dispatcher(void *hari_par){
         if(i1 == 1){
             i1 = 0;
         }else{
-            mmu_function(6);
             //printf("nextcore = %d\n", nextCore);
             if(cpu.core[i].treetam >= 1 /*&& core.core_num == nextCore*/){
                 if(cpu.core[i].busy != 1){
@@ -109,8 +115,14 @@ void *scheduler_dispatcher(void *hari_par){
                 execdata = cpu.core[i].exec->data;
                 cpu.core[i].root = delete(cpu.core[i].root, cpu.core[i].exec->data);
                 cpu.core[i].treetam--;
-                //printf("╔═══════════════════════════════════╗\n\n                core%d                \nid: %d    vruntime: %d\n╚═══════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
-                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
+                cpu.core[i].pc = execdata.pc;
+               
+                printf("ptbr sch: %06X\n", execdata.ptbr);
+                haddr = mmu_function(cpu.core[i].pc, execdata.ptbr);
+                //printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
+                printf("---------core%d---------    thread 1: [ id: %d 0x%06X: [%08X] ]\n", cpu.core[i].core_num, execdata.pid, execdata.pc, mem[haddr]);
+
+                execdata.pc+=4;
 
                 vrunt =execdata.vruntime;
                 vrunt = vrunt + (param->timer * execdata.decay_factor);
@@ -118,8 +130,12 @@ void *scheduler_dispatcher(void *hari_par){
                 execdata.rtime -= param->timer;
                 execdata.egoera = 1;
                 //inorder(cpu.core[i].root);
+                
 
-                if(execdata.rtime > 0){
+                if(mem[haddr] == -268435456){
+                    printf("viva er beti carajo\n");
+                    cpu.core[i].busy = 0;
+                }else if(execdata.rtime > 0){
                     if(cpu.core[i].root == NULL){
                         cpu.core[i].root = new_node(execdata);
                         cpu.core[i].treetam++;

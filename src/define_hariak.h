@@ -50,6 +50,7 @@ struct process_control_block{
     int ptbr;
     struct mm mm;
     int err[16];
+    int pc;
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko
@@ -75,8 +76,10 @@ struct core_t{
     int core_num;
     int busy;
     int treetam;
-    struct process_control_block hari1;
-    struct process_control_block hari2;
+    int pc;
+    int ir;
+    //struct process_control_block hari1;
+    //struct process_control_block hari2;
 };
 
 
