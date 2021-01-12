@@ -42,21 +42,21 @@ pthread_mutex_t lock;
 * MMU-aren funtzioa
 */
 void mmu_function(int vaddr){
-    char helblog[6], orrz[4], desp[4];
+    char helblog[6], orrz[6], desp[2];
     int i, j, k, orrizenb, markozenb, desplaz;
 
 
     //Lortu orri-zenbakia eta desplazamendua
     sprintf(helblog, "%06X", vaddr);
-    sprintf(orrz, "%c%c%c", helblog[0], helblog[1], helblog[2]);
-    sprintf(desp, "%c%c%c", helblog[3], helblog[4], helblog[5]);
-    orrz[3] = '\0';
-    desp[3] = '\0';
+    sprintf(orrz, "%c%c%c%c%c", helblog[0], helblog[1], helblog[2], helblog[3], helblog[4]);
+    sprintf(desp, "%c", helblog[5]);
+    orrz[6] = '\0';
+    desp[2] = '\0';
 
     orrizenb = (int)strtol(orrz, NULL, 16);
     desplaz = (int)strtol(desp, NULL, 16);
-    printf("orri-zenbakia:%03X\n", orrizenb);
-    printf("desplazamendua:%03X\n", desplaz);
+    printf("orri-zenbakia:%05X\n", orrizenb);
+    printf("desplazamendua:%01X\n", desplaz);
 }
 
 /*

@@ -124,7 +124,7 @@ void getfreequeue(int p_kop){
 
     while(i < p_kop){
         kont = 1;
-        for(j = addr; j < MEM_CAP; j++){
+        for(j = addr; j < orrtau; j++){
             if(mem[j] == 0 && first == 0){
                 fq.addr = j;
                 first = 1;
@@ -138,7 +138,7 @@ void getfreequeue(int p_kop){
             fq.freespace = kont;
             freemem[i] = fq;
         }
-        if(j < MEM_CAP)
+        if(j < orrtau)
             i++;
         else
             break;
@@ -166,7 +166,7 @@ int checkmemspace(int progsize, int p_kop){
     return addr;
 }
 
-void storedata(int addr, int data, int framekont, int orrikont){
+void storedata(int addr, int data){
     if(addr != -1)
         mem[addr] = data;
 
@@ -185,6 +185,7 @@ void *loader(void *hari_par){
     FILE *fp;
     char line[16], file_name[16];
     char *a, *com, *reg, *reg2, *reg3;
+    double progsize_bit;
     //char registroa;
 
     //Hasieraketak
@@ -198,6 +199,7 @@ void *loader(void *hari_par){
     lnum = 0;
     kont = 0;
     progsize = 0;
+    progsize_bit = 0;
     framekont = 0;
     orrikont = 0;
 
@@ -231,6 +233,8 @@ void *loader(void *hari_par){
         pcb.decay_factor = (float)weight0/pcb.weight;
         pcb.rtime = 0;
         pcb.vruntime = 0;
+        if(j == 0)
+            pcb.ptbr = orrtau;
 
 
 
@@ -249,10 +253,13 @@ void *loader(void *hari_par){
         }
         fclose(fp);
         progsize = progsize - 2;
-        printf("    -programaren tamaina: %d\n", progsize);
+        progsize = progsize*4;
+        progsize_bit = progsize * 0.125;
+        printf("    -programaren tamaina: %0.1fB\n", progsize_bit);
         memspace = checkmemspace(progsize, p_kop);
         printf("    -memspace: 0x%06X\n", memspace);
         progsize = 0;
+        progsize_bit = 0;
 
 
         if(memspace != -1){
@@ -290,7 +297,7 @@ void *loader(void *hari_par){
                         pcb.rtime = pcb.rtime + 7;
 
                         //datua memorian gorde
-                        storedata(memspace, num, framekont, orrikont);
+                        storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
                                 mem[orrtau + orrikont] = memspace;
@@ -316,7 +323,7 @@ void *loader(void *hari_par){
                         pcb.rtime = pcb.rtime + 5;
 
                         //datua memorian gorde
-                        storedata(memspace, num, framekont, orrikont);
+                        storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
                                 mem[orrtau + orrikont] = memspace;
@@ -334,7 +341,7 @@ void *loader(void *hari_par){
                         printf("0x%06X [%08X]    %s   %s,%s,%s\n", kont, num, com, reg, reg2, reg3);
                     }else{
                         //datua memorian gorde
-                        storedata(memspace, num, framekont, orrikont);
+                        storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
                                 mem[orrtau + orrikont] = memspace;
@@ -355,7 +362,7 @@ void *loader(void *hari_par){
                     int num = (int)strtol(line, NULL, 16);
 
                     //datua memorian gorde
-                    storedata(memspace, num, framekont, orrikont);
+                    storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
                                 mem[orrtau + orrikont] = memspace;
@@ -376,6 +383,10 @@ void *loader(void *hari_par){
             }
             lnum++;
         }
+        printf("ptbr: %06X\n", pcb.ptbr);
+        pcb.ptbr = orrtau + orrikont + 1;
+
+
         printf("prog%d zikloak: %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         printf("╚═════════════════════════════════════════╝\n\n");
         lnum = 0;

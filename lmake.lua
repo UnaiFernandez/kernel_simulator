@@ -22,12 +22,12 @@ end
 
 function exec()
     build()
-    lmake_exec("binaries/seso -p1 -m10 -t40 -c1")
+    lmake_exec("binaries/seso -p1 -m40 -t5 -c1")
 end
 
 function exec4()
     build()
-    lmake_exec("binaries/seso -p4 -m10 -t40 -c2")
+    lmake_exec("binaries/seso -p4 -m40 -t5 -c2")
 end
 
 function exec4fast()
