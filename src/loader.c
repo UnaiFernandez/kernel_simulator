@@ -169,7 +169,7 @@ void storedata(int addr, int data){
     if(addr != -1)
         mem[addr] = data;
 
-    
+
 }
 
 /*
@@ -237,9 +237,9 @@ void *loader(void *hari_par){
 
 
         getfreequeue(p_kop, memspace);
-        printf("\n");    
         printf("\n");
-    
+        printf("\n");
+
 
         printf("%s\n", file_name);
         //fitxategiak dituen lerroak kontatu
@@ -295,7 +295,7 @@ void *loader(void *hari_par){
 
                         pcb.vruntime = pcb.vruntime + 7;
                         pcb.rtime = pcb.rtime + 7;
-                        
+
                         if(lnum == 3){
                             pcb.ptbr = orrtau + orrikont;
                         }
@@ -405,7 +405,7 @@ void *loader(void *hari_par){
         }
         printf("ptbr: %d  %06X\n", pcb.ptbr, pcb.ptbr);
 
-        
+
 
         printf("prog%d zikloak: %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         printf("╚═════════════════════════════════════════╝\n\n");
@@ -436,15 +436,15 @@ void *loader(void *hari_par){
         j++;
     }
     for(i = 0; i < 300; i+=4)
-            printf("memspace: %08X %08X\n", i, mem[i]);
+        DEBUG_WRITE("memspace: %08X %08X\n", i, mem[i]);
 
 
-    //printf("\n");
-    //printf("\n");
-    //printf("\n");
+    DEBUG_WRITE("\n");
+    DEBUG_WRITE("\n");
+    DEBUG_WRITE("\n");
 
     for(j = orrtau; j < orrtau + 100; j+=4)
-        printf("marko: %d %08X\n", j, mem[j]);
+        DEBUG_WRITE("marko: %d %08X\n", j, mem[j]);
 
 
     /*for(int k = 0; k < param->core_kop; k++){
