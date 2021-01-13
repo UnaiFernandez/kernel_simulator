@@ -200,7 +200,7 @@ void *loader(void *hari_par){
     progsize = 0;
     progsize_bit = 0;
     framekont = 0;
-    orrikont = 0;
+    orrikont = -4;
 
 
     //Hariaren hasierako informazioa pantailaratu
@@ -232,10 +232,6 @@ void *loader(void *hari_par){
         pcb.decay_factor = (float)weight0/pcb.weight;
         pcb.rtime = 0;
         pcb.vruntime = 0;
-        if(j == 0)
-            pcb.ptbr = orrtau;
-        else
-            pcb.ptbr = orrtau + orrikont + 1;
         pcb.pc = 0;
 
 
@@ -299,18 +295,24 @@ void *loader(void *hari_par){
 
                         pcb.vruntime = pcb.vruntime + 7;
                         pcb.rtime = pcb.rtime + 7;
-
+                        
+                        if(lnum == 3){
+                            pcb.ptbr = orrtau + orrikont;
+                        }
                         //datua memorian gorde
                         storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
-                                mem[pcb.ptbr + orrikont] = memspace;
+                                orrikont+=4;
+                                //printf("memspace: %d %08X   ", orrtau + orrikont, memspace);
+                                mem[orrtau + orrikont] = memspace;
                                 DEBUG_WRITE("%06X      \n", mem[orrtau + orrikont]);
                                 framekont++;
                                 memspace+=4;
                             }else if(framekont == 4){
-                                mem[pcb.ptbr + orrikont] = memspace;
-                                orrikont++;
+                                orrikont+=4;
+                                //printf("memspace: %d %08X   ", orrtau + orrikont, memspace);
+                                mem[orrtau + orrikont] = memspace;
                                 framekont = 1;
                                 memspace+=4;
                             }else{
@@ -333,13 +335,14 @@ void *loader(void *hari_par){
                         storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
-                                mem[pcb.ptbr + orrikont] = memspace;
+                                orrikont+=4;
+                                mem[orrtau + orrikont] = memspace;
                                 DEBUG_WRITE("%06X     \n ", mem[orrtau + orrikont]);
                                 framekont++;
                                 memspace+=4;
                             }else if(framekont == 4){
-                                mem[pcb.ptbr + orrikont] = memspace;
-                                orrikont++;
+                                orrikont+=4;
+                                mem[orrtau + orrikont] = memspace;
                                 framekont = 1;
                                 memspace+=4;
                             }else{
@@ -354,13 +357,14 @@ void *loader(void *hari_par){
                         storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
-                                mem[pcb.ptbr + orrikont] = memspace;
+                                orrikont+=4;
+                                mem[orrtau + orrikont] = memspace;
                                 DEBUG_WRITE("%06X      \n", mem[orrtau + orrikont]);
                                 framekont++;
                                 memspace+=4;
                             }else if(framekont == 4){
-                                orrikont++;
-                                mem[pcb.ptbr + orrikont] = memspace;
+                                orrikont+=4;
+                                mem[orrtau + orrikont] = memspace;
                                 framekont = 1;
                                 memspace+=4;
                             }else{
@@ -377,13 +381,14 @@ void *loader(void *hari_par){
                     storedata(memspace, num);
                         if(memspace != -1){
                             if(framekont == 0){
-                                mem[pcb.ptbr + orrikont] = memspace;
+                                orrikont+=4;
+                                mem[orrtau + orrikont] = memspace;
                                 DEBUG_WRITE("%06X      \n", mem[orrtau + orrikont]);
                                 framekont++;
                                 memspace+=4;
                             }else if(framekont == 4){
-                                orrikont++;
-                                mem[pcb.ptbr + orrikont] = memspace;
+                                orrikont+=4;
+                                mem[orrtau + orrikont] = memspace;
                                 framekont = 1;
                                 memspace+=4;
                             }else{
@@ -398,9 +403,9 @@ void *loader(void *hari_par){
             lnum++;
             DEBUG_WRITE("orrikont: %d\n", orrikont);
         }
-        printf("ptbr: %06X\n", pcb.ptbr);
+        printf("ptbr: %d  %06X\n", pcb.ptbr, pcb.ptbr);
 
-
+        
 
         printf("prog%d zikloak: %d, %d\n", pcb.pid, pcb.rtime, pcb.vruntime);
         printf("╚═════════════════════════════════════════╝\n\n");
@@ -425,8 +430,23 @@ void *loader(void *hari_par){
             printf("[ERR]  There's no space in the memory!\n");
             printf("\n");
         }
+        framekont = 4;
+        //orrikont += 4;
+
         j++;
     }
+    for(i = 0; i < 300; i+=4)
+            printf("memspace: %08X %08X\n", i, mem[i]);
+
+
+    //printf("\n");
+    //printf("\n");
+    //printf("\n");
+
+    for(j = orrtau; j < orrtau + 100; j+=4)
+        printf("marko: %d %08X\n", j, mem[j]);
+
+
     /*for(int k = 0; k < param->core_kop; k++){
         printf("core%d:", k);
         inorder(cpu.core[k].root);
