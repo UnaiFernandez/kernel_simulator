@@ -31,6 +31,10 @@ void *loader(void *hari_param);
 void *timer(void *hari_param);
 void *clockfunc(void *hari_param);
 void sortu_hariak(int hari_kop, int proz_kop, int maiz, int tim, int core_kop);
+
+// Loader eta schedulerrean erabiltzen diren funtzioak
+char* getcommand(char command);
+char* getregister(char regist);
 //memory management
 struct mm{
     int text;

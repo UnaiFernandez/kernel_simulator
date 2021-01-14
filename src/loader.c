@@ -228,6 +228,7 @@ void *loader(void *hari_par){
         //Prozesu nulua sortu prozesu kopurura iristen bada.
         pcb.pid = j;//rand() % 100;
         pcb.nice =  (rand() % (upper - lower + 1)) + lower;
+        printf("nice--------------------------%d\n", pcb.nice);
         pcb.weight = weight[pcb.nice];
         pcb.decay_factor = (float)weight0/pcb.weight;
         pcb.rtime = 0;
