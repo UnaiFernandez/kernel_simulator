@@ -32,7 +32,9 @@ void *timer(void *hari_par){
         if(tick == t+param->timer){
             printf("\n");
             pthread_mutex_lock(&mutex);
+            printf("\n");
             printf("[TIMER] seinalea bidalita\n");
+            printf("\n");
             fflush(stdout);
             while(done < param->core_kop)
                 pthread_cond_wait(&cond, &mutex);
