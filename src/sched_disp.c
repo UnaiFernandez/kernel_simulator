@@ -198,8 +198,8 @@ void *scheduler_dispatcher(void *hari_par){
                 }
             }else{
                 cpu.core[i].root = new_node(nulua);
-                //printf("╔═══════════════════════════════════╗\n\n                core%d                \nid: %d    vruntime: %d\n╚═══════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
-                printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, nulua.pid, nulua.vruntime);
+                printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\n process id: %d\n \n [!] No process detected.\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, nulua.pid);
+                //printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, nulua.pid, nulua.vruntime);
                 //treetam++;
             }
             /*for(int k = 0; k < param->core_kop; k++){
