@@ -56,11 +56,11 @@ int mmu_function(int vaddr, int ptbr){
 
     orrizenb = (int)strtol(orrz, NULL, 16);
     desplaz = (int)strtol(desp, NULL, 16);
-    printf("orri-zenbakia:%05X\n", orrizenb);
-    printf("desplazamendua:%01X\n", desplaz);
+    DEBUG_WRITE("orri-zenbakia:%05X\n", orrizenb);
+    DEBUG_WRITE("desplazamendua:%01X\n", desplaz);
 
     markozenb = mem[ptbr+orrizenb*4];
-    printf("markozenbakia:%06X\n", markozenb);
+    DEBUG_WRITE("markozenbakia:%06X\n", markozenb);
     haddr = markozenb + desplaz;
 
     return haddr;
@@ -125,7 +125,7 @@ void *scheduler_dispatcher(void *hari_par){
                 cpu.core[i].treetam--;
                 cpu.core[i].pc = execdata.pc;
 
-                printf("ptbr sch: %06X\n", execdata.ptbr);
+                DEBUG_WRITE("ptbr sch: %06X\n", execdata.ptbr);
                 haddr = mmu_function(cpu.core[i].pc, execdata.ptbr);
 
                 sprintf(execcom, "%08X", mem[haddr]);
@@ -137,10 +137,10 @@ void *scheduler_dispatcher(void *hari_par){
                 ldataaddr = (int) strtol(ldataaddr_str, NULL, 16);
                 if(strstr(com, "ld") != NULL){
                       dataaddr = mmu_function(ldataaddr, execdata.ptbr);
-                      printf("+++++++++++++++++++++++++++++%08X  %d\n", mem[dataaddr], mem[dataaddr]);
+                      //printf("+++++++++++++++++++++++++++++%08X  %d\n", mem[dataaddr], mem[dataaddr]);
                       execdata.err[erreg] = mem[dataaddr];
-                }
-                if(strstr(com, "add") != NULL){
+                      printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s   %s, %d\n |\n  -->  %s = %d\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com, getregister(execcom[1]), mem[dataaddr], getregister(execcom[1]), mem[dataaddr]);
+                }else if(strstr(com, "add") != NULL){
                       int r1, r2, r3, err1, err2, err3;
                       err1 = (int) execcom[1];
                       err2 = (int) execcom[2];
@@ -149,12 +149,20 @@ void *scheduler_dispatcher(void *hari_par){
                       r3 = execdata.err[err3];
                       r1 = r2 + r3;
                       execdata.err[err1] = r1;
-                      printf("%d + %d = %d\n", r2, r3, execdata.err[err1]);
+                      printf("[Batuketa]  (%s)%d + (%s)%d = %d\n", getregister(execcom[2]), r2, getregister(execcom[3]), r3, execdata.err[err1]);
+                      printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d info:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s   %s, %s, %s\n |\n  -->  %d + %d = %d\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com, getregister(execcom[1]), getregister(execcom[2]), getregister(execcom[3]), r2, r3, execdata.err[err1]);
+                }else if(strstr(com, "st") != NULL){
+                      dataaddr = mmu_function(ldataaddr, execdata.ptbr);
+                      mem[dataaddr] = execdata.err[erreg];
+                      printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s   %s, %d\n |\n  -->  %s = %d\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com, getregister(execcom[1]), mem[dataaddr], getregister(execcom[1]), mem[dataaddr]);
+                }else if(strstr(com, "exit") != NULL){
+                      printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s\n |\n  --> Exiting...\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com);
                 }
-                printf("%s %s----------------------------------------------------\n", com, reg);
+
+                //printf("%s %s----------------------------------------------------\n", com, reg);
 
                 //printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
-                printf("---------core%d---------    thread 1: [ id: %d 0x%06X: [%08X] ]\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr]);
+                //printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\nthread 1: [ id: %d 0x%06X: [%08X] ]\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr]);
 
                 execdata.pc+=4;
 
@@ -166,8 +174,9 @@ void *scheduler_dispatcher(void *hari_par){
                 //inorder(cpu.core[i].root);
 
 
-                if(mem[haddr] == -268435456){
-                    printf("viva er beti carajo\n");
+
+                //if(mem[haddr] == -268435456){
+                if(strstr(com, "exit") != NULL){
                     cpu.core[i].busy = 0;
                 }else if(execdata.rtime > 0){
                     if(cpu.core[i].root == NULL){

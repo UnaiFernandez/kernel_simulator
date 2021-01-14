@@ -12,7 +12,7 @@ exec1:
 exec2:
 		./binaries/seso -p2 -m40 -t5 -c2
 exec4:
-		./binaries/seso -p4 -m40 -t5 -c1
+		./binaries/seso -p4 -m40 -t5 -c4
 exec10:
 		./binaries/seso -p10 -m10 -t40 -c10
 
