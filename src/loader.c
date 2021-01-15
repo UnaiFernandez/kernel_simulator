@@ -178,7 +178,7 @@ void storedata(int addr, int data){
 void *loader(void *hari_par){
 
     int j, i, p_kop, p, tam, lnum, kont, dat, num, progsize, memspace, framekont, orrikont;
-    int lower = 0, upper = 40, minrt = 30, maxrt = 250;
+    int lower = 20, upper = 40, minrt = 30, maxrt = 250;
     struct hari_param *param;
     struct process_control_block pcb;
     FILE *fp;
@@ -226,9 +226,12 @@ void *loader(void *hari_par){
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu nulua sortu prozesu kopurura iristen bada.
-        pcb.pid = j;//rand() % 100;
-        pcb.nice =  (rand() % (upper - lower + 1)) + lower;
-        printf("nice--------------------------%d\n", pcb.nice);
+        int randomzenb;
+        for(int a = 0; a < 20; a++){
+            randomzenb = (rand() % (upper - lower + 1)) + lower;
+        }
+        pcb.pid = j;
+        pcb.nice = randomzenb;
         pcb.weight = weight[pcb.nice];
         pcb.decay_factor = (float)weight0/pcb.weight;
         pcb.rtime = 0;

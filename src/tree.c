@@ -80,6 +80,7 @@ struct node* delete(struct node *root, struct process_control_block x)
         root->left_child = delete(root->left_child, x);
     else
     {
+        if(root->data.pid == x.pid){
         //No Children
         if(root->left_child==NULL && root->right_child==NULL)
         {
@@ -106,6 +107,9 @@ struct node* delete(struct node *root, struct process_control_block x)
             root->data = temp->data;
             root->right_child = delete(root->right_child, temp->data);
         }
+      }else{
+        root->left_child = delete(root->left_child, x);
+      }
     }
     return root;
 }

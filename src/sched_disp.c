@@ -115,6 +115,7 @@ void *scheduler_dispatcher(void *hari_par){
                     busy_arr[cpu.core[i].core_num] = 1;
                 }
                 //lag = core.exec;
+                printf("\n");
                 execdata = cpu.core[i].exec->data;
                 cpu.core[i].root = delete(cpu.core[i].root, cpu.core[i].exec->data);
                 /*for(int k = 0; k < param->core_kop; k++){
@@ -122,6 +123,7 @@ void *scheduler_dispatcher(void *hari_par){
                     inorder(cpu.core[k].root);
                     printf("\n");
                 }*/
+                printf("\n");
                 cpu.core[i].treetam--;
                 cpu.core[i].pc = execdata.pc;
 
@@ -149,7 +151,7 @@ void *scheduler_dispatcher(void *hari_par){
                       r3 = execdata.err[err3];
                       r1 = r2 + r3;
                       execdata.err[err1] = r1;
-                      printf("[Batuketa]  (%s)%d + (%s)%d = %d\n", getregister(execcom[2]), r2, getregister(execcom[3]), r3, execdata.err[err1]);
+                      //printf("[Batuketa]  (%s)%d + (%s)%d = %d\n", getregister(execcom[2]), r2, getregister(execcom[3]), r3, execdata.err[err1]);
                       printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d info:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s   %s, %s, %s\n |\n  -->  %d + %d = %d\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com, getregister(execcom[1]), getregister(execcom[2]), getregister(execcom[3]), r2, r3, execdata.err[err1]);
                 }else if(strstr(com, "st") != NULL){
                       dataaddr = mmu_function(ldataaddr, execdata.ptbr);
@@ -159,19 +161,22 @@ void *scheduler_dispatcher(void *hari_par){
                       printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s\n |\n  --> Exiting...\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com);
                 }
 
-                //printf("%s %s----------------------------------------------------\n", com, reg);
 
                 //printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
-                //printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\nthread 1: [ id: %d 0x%06X: [%08X] ]\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr]);
 
                 execdata.pc+=4;
 
                 vrunt =execdata.vruntime;
+                //printf("vruntime %d\n", execdata.vruntime);
+                //printf("timer %d\n", param->timer);
                 vrunt = vrunt + (param->timer * execdata.decay_factor);
+                //printf("decay factor %02f \n", execdata.decay_factor);
+                //printf("vrunt %d\n", vrunt);
                 execdata.vruntime = vrunt;
+                //printf("vruntime %d\n", execdata.vruntime);
                 execdata.rtime -= param->timer;
                 execdata.egoera = 1;
-                //inorder(cpu.core[i].root);
+
 
 
 
