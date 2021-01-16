@@ -55,6 +55,7 @@ struct process_control_block{
     struct mm mm;
     int err[16];
     int pc;
+    int tamaina;
 };
 
 // tick en azken balioa irakurtzen dela bermatzeko

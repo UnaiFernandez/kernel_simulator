@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -6,6 +7,15 @@
 
 #include "define_hariak.h"
 #include "tree.h"
+
+
+void freemem_func(int addr, int tam){
+    int i;
+
+    for(i = addr; i < addr + tam*4; i+=4){
+        mem[i] = 0;
+    }
+}
 
 
 /*
@@ -182,6 +192,10 @@ void *scheduler_dispatcher(void *hari_par){
 
                 //if(mem[haddr] == -268435456){
                 if(strstr(com, "exit") != NULL){
+                    freemem_func(mem[execdata.ptbr], execdata.tamaina);
+                    //freemem_func(8, 2);
+                    //for(i = 0; i < 300; i+=4)
+                        //printf("memspace: %08X %08X\n", i, mem[i]);
                     cpu.core[i].busy = 0;
                 }else if(execdata.rtime > 0){
                     if(cpu.core[i].root == NULL){

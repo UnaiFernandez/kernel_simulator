@@ -256,6 +256,7 @@ void *loader(void *hari_par){
         }
         fclose(fp);
         progsize = progsize - 2;
+        pcb.tamaina = progsize;
         progsize = progsize*4;
         progsize_bit = progsize * 0.125;
         printf("    -programaren tamaina: %0.1fB\n", progsize_bit);
