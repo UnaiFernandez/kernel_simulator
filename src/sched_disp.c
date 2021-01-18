@@ -71,6 +71,7 @@ int mmu_function(int vaddr, int ptbr){
     DEBUG_WRITE("orri-zenbakia:%05X\n", orrizenb);
     DEBUG_WRITE("desplazamendua:%01X\n", desplaz);
 
+    //lortu marko zenbakia
     markozenb = mem[ptbr+orrizenb*4];
     DEBUG_WRITE("markozenbakia:%06X\n", markozenb);
     haddr = markozenb + desplaz;
@@ -119,22 +120,18 @@ void *scheduler_dispatcher(void *hari_par){
         if(i1 == 1){
             i1 = 0;
         }else{
-            //printf("nextcore = %d\n", nextCore);
-            if(cpu.core[i].treetam >= 1 /*&& core.core_num == nextCore*/){
+            
+            if(cpu.core[i].treetam >= 1){
                 if(cpu.core[i].busy != 1){
                     cpu.core[i].busy = 1;
                     cpu.core[i].exec = find_minimum(cpu.core[i].root);
                     busy_arr[cpu.core[i].core_num] = 1;
                 }
-                //lag = core.exec;
+
                 printf("\n");
                 execdata = cpu.core[i].exec->data;
                 cpu.core[i].root = delete(cpu.core[i].root, cpu.core[i].exec->data);
-                /*for(int k = 0; k < param->core_kop; k++){
-                    printf("core%d:", k);
-                    inorder(cpu.core[k].root);
-                    printf("\n");
-                }*/
+              
                 printf("\n");
                 cpu.core[i].treetam--;
                 cpu.core[i].pc = execdata.pc;
@@ -142,6 +139,7 @@ void *scheduler_dispatcher(void *hari_par){
                 DEBUG_WRITE("ptbr sch: %06X\n", execdata.ptbr);
                 haddr = mmu_function(cpu.core[i].pc, execdata.ptbr);
 
+                //agindu bakoitza prozesatu
                 sprintf(execcom, "%08X", mem[haddr]);
 
                 com = getcommand(execcom[0]);
@@ -151,7 +149,7 @@ void *scheduler_dispatcher(void *hari_par){
                 ldataaddr = (int) strtol(ldataaddr_str, NULL, 16);
                 if(strstr(com, "ld") != NULL){
                       dataaddr = mmu_function(ldataaddr, execdata.ptbr);
-                      //printf("+++++++++++++++++++++++++++++%08X  %d\n", mem[dataaddr], mem[dataaddr]);
+               
                       execdata.err[erreg] = mem[dataaddr];
                       printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s   %s, %d\n |\n  -->  %s = %d\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com, getregister(execcom[1]), mem[dataaddr], getregister(execcom[1]), mem[dataaddr]);
                 }else if(strstr(com, "add") != NULL){
@@ -163,7 +161,7 @@ void *scheduler_dispatcher(void *hari_par){
                       r3 = execdata.err[err3];
                       r1 = r2 + r3;
                       execdata.err[err1] = r1;
-                      //printf("[Batuketa]  (%s)%d + (%s)%d = %d\n", getregister(execcom[2]), r2, getregister(execcom[3]), r3, execdata.err[err1]);
+                      
                       printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d info:\n process id: %d            PC: 0x%06X           data: [%08X]\n \n Command:\n %s   %s, %s, %s\n |\n  -->  %d + %d = %d\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, execdata.pid, cpu.core[i].pc, mem[haddr], com, getregister(execcom[1]), getregister(execcom[2]), getregister(execcom[3]), r2, r3, execdata.err[err1]);
                 }else if(strstr(com, "st") != NULL){
                       dataaddr = mmu_function(ldataaddr, execdata.ptbr);
@@ -174,30 +172,20 @@ void *scheduler_dispatcher(void *hari_par){
                 }
 
 
-                //printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, execdata.pid, execdata.vruntime);
 
                 execdata.pc+=4;
 
                 vrunt =execdata.vruntime;
-                //printf("vruntime %d\n", execdata.vruntime);
-                //printf("timer %d\n", param->timer);
-                vrunt = vrunt + (param->timer * execdata.decay_factor);
-                //printf("decay factor %02f \n", execdata.decay_factor);
-                //printf("vrunt %d\n", vrunt);
+                vrunt = vrunt + (param->timer * execdata.decay_factor);;
                 execdata.vruntime = vrunt;
-                //printf("vruntime %d\n", execdata.vruntime);
                 execdata.rtime -= param->timer;
                 execdata.egoera = 1;
 
 
 
-
-                //if(mem[haddr] == -268435456){
+                //prozesuaren amaiera den atertu
                 if(strstr(com, "exit") != NULL){
                     freemem_func(mem[execdata.ptbr], execdata.tamaina);
-                    //freemem_func(8, 2);
-                    //for(i = 0; i < 300; i+=4)
-                        //printf("memspace: %08X %08X\n", i, mem[i]);
                     cpu.core[i].busy = 0;
                 }else if(execdata.rtime > 0){
                     if(cpu.core[i].root == NULL){
@@ -215,19 +203,11 @@ void *scheduler_dispatcher(void *hari_par){
                 //Prozesuak amaitzen direnean, prozesu nulua sartzen du core barruan
                 if(cpu.core[i].root == NULL){
                     cpu.core[i].root = new_node(nulua);
-                    //treetam++;
                 }
             }else{
                 cpu.core[i].root = new_node(nulua);
                 printf("╔════════════════════════════════════════════════════════════════╗\n CORE %d:\n process id: %d\n \n [!] No process detected.\n╚════════════════════════════════════════════════════════════════╝\n", cpu.core[i].core_num, nulua.pid);
-                //printf("---------core%d---------    thread 1: [ id: %d vruntime: %d ]\n", cpu.core[i].core_num, nulua.pid, nulua.vruntime);
-                //treetam++;
             }
-            /*for(int k = 0; k < param->core_kop; k++){
-                printf("core%d:", k);
-                inorder(cpu.core[k].root);
-                printf("\n");
-            }*/
         }
         pthread_cond_signal(&cond);
         pthread_cond_wait(&cond2, &mutex);

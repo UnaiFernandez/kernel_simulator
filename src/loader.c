@@ -17,6 +17,10 @@ struct node *root;
 volatile int treetam = 0;
 struct node *lefmost;
 
+
+/*
+* zenbakiaren arabera komando bat bueltatzen du
+*/
 char* getcommand(char command){
     char *com;
     switch (command){
@@ -29,7 +33,9 @@ char* getcommand(char command){
     return com;
 }
 
-
+/*
+* zenbaki baten arabera erregistroa bueltatzen du
+*/
 char* getregister(char regist){
     char *reg;
     switch (regist){
@@ -55,30 +61,9 @@ char* getregister(char regist){
 }
 
 
-int getNum(char ch)
-{
-    int num=0;
-    if(ch>='0' && ch<='9')
-    {
-        num=ch-0x30;
-    }
-    else
-    {
-        switch(ch)
-        {
-            case 'A': case 'a': num=10; break;
-            case 'B': case 'b': num=11; break;
-            case 'C': case 'c': num=12; break;
-            case 'D': case 'd': num=13; break;
-            case 'E': case 'e': num=14; break;
-            case 'F': case 'f': num=15; break;
-            default: num=0;
-        }
-    }
-    return num;
-}
-
-
+/*
+*  aginduaren helbidea lortzeko
+*/
 void addrcomm(char *hex){
     int i, j = 2;
 
@@ -88,7 +73,9 @@ void addrcomm(char *hex){
     }
 }
 
-
+/*
+*  .text eta .data hitzak ezabatzeko
+*/
 void deleteword(char *str){
     int i, j = 6;
 
@@ -96,6 +83,10 @@ void deleteword(char *str){
        str[i] = str[j];
     }
 }
+
+/*
+* Memoria hasieratzeko funtzioa
+*/
 void initmem(){
     int i;
 
@@ -104,6 +95,9 @@ void initmem(){
 }
 
 
+/*
+* Memorian dauden hutsuneen ilara hasieratu
+*/
 void initfreequeue(){
     struct freequeue fq;
 
@@ -113,6 +107,10 @@ void initfreequeue(){
     freemem[0] = fq;
 }
 
+
+/*
+*  Memorian dauden hutsuneen ilara lortu
+*/
 void getfreequeue(int p_kop, int addr){
     int i, j, first, kont;
     struct freequeue fq;
@@ -152,6 +150,9 @@ printf("]\n");
 }
 
 
+/*
+*  Memorian procesuaren datuak sartzeko lekua dagoen bilatzeko
+*/
 int checkmemspace(int progsize, int p_kop){
     int i, addr;
     addr = -1;
@@ -165,6 +166,10 @@ int checkmemspace(int progsize, int p_kop){
     return addr;
 }
 
+
+/*
+*  memorian datu bat gordetzeko
+*/
 void storedata(int addr, int data){
     if(addr != -1)
         mem[addr] = data;
@@ -225,7 +230,7 @@ void *loader(void *hari_par){
         sprintf(file_name, "%s%03d.elf", default_filename, j);
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
-        //Prozesu nulua sortu prozesu kopurura iristen bada.
+        //Prozesu bat sortu
         int randomzenb;
         for(int a = 0; a < 20; a++){
             randomzenb = (rand() % (upper - lower + 1)) + lower;
@@ -239,14 +244,15 @@ void *loader(void *hari_par){
         pcb.pc = 0;
 
 
-
+        //libre dauden memoria zatiak lortu
         getfreequeue(p_kop, memspace);
         printf("\n");
         printf("\n");
 
 
         printf("%s\n", file_name);
-        //fitxategiak dituen lerroak kontatu
+        
+        //fitxategiak dituen lerroak kontatu tamaina kalkulatzeko
         fp = fopen(file_name, "r");
         //fp = fopen("prog/prog002.elf", "r");
         if(fp == NULL)
@@ -290,6 +296,7 @@ void *loader(void *hari_par){
                     printf(".data %06X %d\n", pcb.mm.data, pcb.mm.data);
                 if(pcb.mm.data > kont){
                     com = getcommand(line[0]);
+                    //ld eta st komandoak
                     if(strstr(com,"ld") != NULL || strstr(com, "st") != NULL){
                         reg = getregister(line[1]);
                         num = (int)strtol(line, NULL, 16);
@@ -327,7 +334,9 @@ void *loader(void *hari_par){
                         }
 
                         printf("0x%06X [%08X]    %s   %s 0x%06X\n", kont, num, com, reg, dat);
+                    //add komandoa
                     }else if(strstr(com, "add") != NULL){
+                        //erregistroak lortu
                         num = (int)strtol(line, NULL, 16);
                         reg = getregister(line[1]);
                         reg2 = getregister(line[2]);
@@ -356,8 +365,13 @@ void *loader(void *hari_par){
                             }
                         }
                         printf("0x%06X [%08X]    %s   %s,%s,%s\n", kont, num, com, reg, reg2, reg3);
+                    //exit komandia
                     }else if(strstr(com, "exit") != NULL){
                         num = (int)strtol(line, NULL, 16);
+                        
+                        pcb.vruntime = pcb.vruntime + 3;
+                        pcb.rtime = pcb.rtime + 3;
+                        
                         //datua memorian gorde
                         storedata(memspace, num);
                         if(memspace != -1){
@@ -421,7 +435,6 @@ void *loader(void *hari_par){
         DEBUG_WRITE("[PROCESS GENERATOR] id: %d vruntime: %d \n", pcb.pid, pcb.weight);
 
         //Prozesu bat dagokion zuhaitzean sartu.
-        //if(pcb.pid != 83){
             if(cpu.core[i].root != NULL){
                 insert(cpu.core[i].root, pcb);
                 cpu.core[i].treetam++;
@@ -429,14 +442,12 @@ void *loader(void *hari_par){
                 cpu.core[i].root = new_node(pcb);
                 cpu.core[i].treetam++;
             }
-        //}
         i = (i + 1) % param->core_kop;
         }else{
             printf("[ERR]  There's no space in the memory!\n");
             printf("\n");
         }
         framekont = 4;
-        //orrikont += 4;
 
         j++;
     }
