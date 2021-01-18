@@ -8,7 +8,9 @@
 #include "define_hariak.h"
 #include "tree.h"
 
-
+/*
+* Programa bat bukatzerakoan programa horren memoria zatia ezabatzeko
+*/
 void freemem_func(int addr, int tam){
     int i;
 
