@@ -227,7 +227,7 @@ void *loader(void *hari_par){
         DEBUG_WRITE("orritaula = %06X\n", orrtau);
 
         //Fitxategiaren izena osatu
-        sprintf(file_name, "%s%03d.elf", default_filename, j);
+        sprintf(file_name, "%s%03d.elf\0", default_filename, j);
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu bat sortu
@@ -261,6 +261,9 @@ void *loader(void *hari_par){
             progsize++;
         }
         fclose(fp);
+
+
+
         progsize = progsize - 2;
         pcb.tamaina = progsize;
         progsize = progsize*4;
@@ -275,6 +278,7 @@ void *loader(void *hari_par){
         if(memspace != -1){
         //fitxategiko lerro bakoitza prozesatu
         fp = fopen(file_name, "r");
+	printf(":::::::::::::::::: Filename:%s\n", file_name);
         //fp = fopen("prog/prog002.elf", "r");
         //fp = fopen("src/prog000.elf", "r");
         if(fp == NULL){
