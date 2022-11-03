@@ -187,7 +187,7 @@ void *loader(void *hari_par){
     struct hari_param *param;
     struct process_control_block pcb;
     FILE *fp;
-    char line[16], file_name[16];
+    char line[17], file_name[17];
     char *a, *com, *reg, *reg2, *reg3;
     double progsize_bit;
     //char registroa;
@@ -227,7 +227,7 @@ void *loader(void *hari_par){
         DEBUG_WRITE("orritaula = %06X\n", orrtau);
 
         //Fitxategiaren izena osatu
-        sprintf(file_name, "%s%03d.elf\0", default_filename, j);
+        sprintf(file_name, "%s%03d.elf", default_filename, j);
 
         DEBUG_WRITE("[PROCESS GENERATOR] tick read! %d\n", tick);
         //Prozesu bat sortu
@@ -277,7 +277,13 @@ void *loader(void *hari_par){
 
         if(memspace != -1){
         //fitxategiko lerro bakoitza prozesatu
-        fp = fopen(file_name, "r");
+        
+
+
+
+
+
+	fp = fopen(file_name, "r");
 	printf(":::::::::::::::::: Filename:%s\n", file_name);
         //fp = fopen("prog/prog002.elf", "r");
         //fp = fopen("src/prog000.elf", "r");

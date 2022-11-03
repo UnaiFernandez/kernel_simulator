@@ -125,6 +125,6 @@ void inorder(struct node *root)
         printf(" (%d, %d) ", root->data.pid, root->data.vruntime); // printing data at root
         inorder(root->right_child);// visiting right child
     }else{
-        printf("");
+        printf(" ");
     }
 }
